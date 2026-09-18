@@ -1,6 +1,6 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene format=3 uid="uid://bjt1v78eca71p"]
 
-[ext_resource type="Script" path="res://game/session.gd" id="1"]
+[ext_resource type="Script" uid="uid://c7rjr37ja2tcl" path="res://game/session.gd" id="1"]
 
-[node name="WalkerJumpman" type="Node2D"]
+[node name="WalkerJumpman" type="Node2D" unique_id=463563386]
 script = ExtResource("1")

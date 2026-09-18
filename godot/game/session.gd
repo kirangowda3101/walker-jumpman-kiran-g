@@ -182,7 +182,7 @@ func _draw() -> void:
 	var font := ThemeDB.fallback_font
 	var ink := Color("25354a")
 	# All visual assets are original Godot vector drawing, not recovered art.
-	draw_rect(Rect2(-400, -200, 1800, 900), Color("f6f3ec"))
+	draw_rect(Rect2(-400, -200, 2400, 900), Color("f6f3ec"))
 	for x in range(0, int(level.width) + 1, 32):
 		draw_line(Vector2(x, 80), Vector2(x, 320), Color("e7e5df"), 1)
 	for y in range(96, 321, 32):
@@ -195,10 +195,19 @@ func _draw() -> void:
 		draw_rect(Rect2(r.position, Vector2(r.size.x, 4)), Color("438e7d"))
 		for x in range(int(r.position.x)+12, int(r.end.x), 24):
 			draw_line(Vector2(x, r.position.y+12), Vector2(x+7, r.position.y+19), Color("405166"), 1)
-	for entry in level.hazards:
+	for hazard in level.hazards:
+		var hx: float = hazard[0]
+		var hy: float = hazard[1]
+		var hw: float = hazard[2]
+		var hh: float = hazard[3]
+		var step: float = hw / 3.0
 		for i in range(3):
-			var x: float = entry[0] + i*8
-			draw_colored_polygon(PackedVector2Array([Vector2(x,320),Vector2(x+4,304),Vector2(x+8,320)]), Color("d24e42"))
+			var x: float = hx + i * step
+			draw_colored_polygon(PackedVector2Array([
+				Vector2(x, hy + hh),
+				Vector2(x + step * 0.5, hy),
+				Vector2(x + step, hy + hh)
+			]), Color("d24e42"))
 	var finish_x: float = level.finish[0]
 	draw_line(Vector2(finish_x+3, 320), Vector2(finish_x+3, 250), ink, 3)
 	draw_colored_polygon(PackedVector2Array([Vector2(finish_x+5,250),Vector2(finish_x+32,260),Vector2(finish_x+5,274)]), Color("287c68"))

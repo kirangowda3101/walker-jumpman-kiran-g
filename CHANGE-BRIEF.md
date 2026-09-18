@@ -105,7 +105,10 @@ Every jump sits inside the envelope the starter already demonstrates (it ships a
 
 **Optional collectible.** If time allows, I will place one collectible from the GDD's cherry concept on the high route only, so that taking the safe line means forfeiting a reward. This converts the branch from a pure difficulty choice into a risk/reward one. This is a stretch goal; the branch works without it.
 
-**[DECIDE AND EDIT: the branch layout above was drafted with AI assistance. Change the geometry — move the hazard, lengthen a route, or invert which route is risky — and record here what you changed and why. Note the same in SOURCES.md.]**
+**Note (added after implementation):** the branch layout above was drafted
+with AI assistance and is superseded — see the Revision Log for the three
+layouts that failed and the geometry that shipped. Authorship breakdown is
+in SOURCES.md.
 
 ---
 
@@ -190,3 +193,61 @@ Append-only. Original predictions above are not edited.
 **Iteration record.** Three failed sword attempts before the current one: drawn in the same ink colour as the torso (invisible), drawn along the spine (covered by the 18-wide body), and drawn full-length to the ground (read as a staff). Resolved by moving it off the spine, giving it a light blade over a dark outline, and cutting the length at the hip. Details in section 1.
 
 **Still outstanding from Prediction D.** I have not yet done the deliberate press-against-geometry test — walking into the side of the raised block and jumping underneath it, facing both ways. To be done and recorded in TEST-REPORT.md.
+
+
+### 2026-09-18 — level extended
+
+**Prediction A was wrong.** I predicted the camera would stop at the old
+boundary. It did not. Reading `session.gd` showed the camera limit is
+already parameterised:
+
+    camera.position.x = clampf(player.position.x + 100, 320, float(level.width) - 320)
+
+The right-hand invisible wall is likewise built from `level.width`. Changing
+the JSON was sufficient; no camera code was touched. Confirmed by walking to
+the relocated finish and completing the level.
+
+**Prediction B was right.** The grid ran `range(0, 961, 32)`, the background
+hills were a literal `[100, 470, 770]`, the FINISH caption was pinned at
+x=878, and the backdrop rectangle was 1800 wide. All four stopped at the old
+boundary while the level itself extended correctly. Evidence screenshot taken
+before fixing. Repaired by deriving the grid and backdrop from `level.width`,
+positioning the FINISH caption relative to `level.finish[0]`, and adding two
+further hills.
+
+**A defect I did not predict.** The hazard drawing took x from the level data
+but hard-coded y as 320 and 304, and always drew three triangles 8px apart
+regardless of the hazard's stated width. The collision triangles in
+`_add_area` are built from the real rectangle. So a hazard placed anywhere
+other than ground level would kill the player at its true position while
+drawing at the bottom of the level. My own hazards sit at y=304 so the bug is
+dormant in my layout, but it is exactly the visual/physics disagreement the
+assignment warns about. Fixed by reading y, height and width from the entry
+and deriving triangle width as `w / 3.0`, matching what the collision code
+already does. Verified as a no-op refactor: the existing spikes render
+identically.
+
+**Three failed level layouts before the current one.**
+
+1. *Routes stacked vertically.* High platforms sat directly above the low
+   slab at +32. The player is 28 tall and the platform is 16 thick, leaving
+   16px of headroom. The low route was physically unenterable. Found by
+   playing, not by reading.
+2. *High route out of reach.* I moved the platforms to y=256, which is 64
+   above the ground. Peak jump height is 53. Unreachable by any input. Fixed
+   by lowering the geometry into a three-step climb of 40 each — never by
+   raising `jump_velocity`.
+3. *Both routes equally fast.* Geometry worked, design did not: ground 10.5s,
+   high 10.4s. The high route cost three precise jumps and a fall risk and
+   returned 0.1s. Not a decision. Fixed by lengthening the ground route with
+   a second gap and a third spike cluster while giving the high route wide
+   flat hops.
+
+**Measured outcome.** Ground route 14.5s, high route 9.6s, both with 0
+retries, same player, same session. A 4.9s spread, roughly one third faster.
+The fork now trades time against risk as the brief claimed.
+
+**Final geometry** differs from the coordinates planned in section 2 above.
+Those are left unedited as the original prediction. Current layout is in
+`godot/levels/first_steps.json`; level width is now 1520 and the finish sits
+at x=1480.

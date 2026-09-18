@@ -1,6 +1,6 @@
 # CHANGE-BRIEF — walker-jumpman-kiran-g
 
-**Student:** Kiran Gowda
+**Student:** Kiran Gowda Ramanagara Jayaram
 **Course:** CSYE 7270, Fall 2026 — Assignment 1
 **Starter:** [nikbearbrown/walker-jumpman](https://github.com/nikbearbrown/walker-jumpman), "First Steps" slice
 **Engine:** Godot 4.7.2.stable.official.ed1daf0bf
@@ -41,9 +41,25 @@ legs          (-6, -6, 5, 6 + stride) and (2, -6, 5, 6 - stride)
 headband tail  4x2, x flips on facing, trailing side
 ```
 
+Note: the shipped geometry differs from this plan — see the changes below and the Revision Log. The sword was not in the original plan, and the left/right flip was implemented with a canvas transform rather than per-line coordinate ternaries.
+
 No imported art. All original geometric drawing.
 
-**[DECIDE AND EDIT: adjust at least two of these numbers after you see it on screen, and say here what you changed and why.]**
+**Changes made after seeing it on screen:**
+
+- Tried the headband sway at 0.9 and went back to 0.3. At 0.9 the cloth
+  moved faster than fabric that size plausibly would; 0.3 reads as real
+  weight.
+- The sword was invisible in the first two attempts because I had drawn it
+  in the same ink colour as the hood and torso, and along the spine, where
+  the 18-wide body covered it completely. Fixed by angling it diagonally
+  past the left side so it clears the silhouette, and drawing a muted grey
+  blade over a darker outline for contrast. Added a gold pommel above the
+  shoulder.
+- Shortened the blade after a version that reached the ground and read as
+  a staff rather than a sword.
+- Roughly doubled the headband length and made the far tip sway 1.4x the
+  near end, so it whips instead of swinging rigidly.
 
 ---
 
@@ -163,4 +179,14 @@ Planned verification, in order:
 
 Append-only. Original predictions above are not edited.
 
-*(No revisions yet — implementation has not started.)*
+### 2026-09-18 — character implemented
+
+**Departures from the plan.** I added a sword slung across the back, which was not in the original concept. It is the strongest silhouette marker on the figure and does more to distinguish the ninja than the hood taper alone. I also replaced the per-line `facing` ternaries with a single `draw_set_transform` call that mirrors the canvas, so all geometry is authored facing right and the left-facing view is derived. That is less code and removes a class of bug where one element forgets to flip.
+
+**Decorative overhang, declared.** The sword and the headband extend roughly 2–3 px beyond the 18-wide collider on the trailing side, and the sword's pommel sits about 1 px above the head. This is deliberate. Both read as carried equipment rather than body, and because they are drawn on the *trailing* side, the overhang always points away from the direction of travel — so the player never walks decoration into a wall ahead of them. The collider is unchanged at 18x28 with offset (0, −14). No movement tuning was altered.
+
+**Sash colour vs hazard colour, checked.** The sash is crimson (`c0453c`) and the spikes are also red. I played the level standing beside the spike cluster to see whether the two would be confused. They were not — the spikes are a distinct shape and sit on the ground, and at no point did the sash read as a hazard. Keeping the crimson.
+
+**Iteration record.** Three failed sword attempts before the current one: drawn in the same ink colour as the torso (invisible), drawn along the spine (covered by the 18-wide body), and drawn full-length to the ground (read as a staff). Resolved by moving it off the spine, giving it a light blade over a dark outline, and cutting the length at the hip. Details in section 1.
+
+**Still outstanding from Prediction D.** I have not yet done the deliberate press-against-geometry test — walking into the side of the raised block and jumping underneath it, facing both ways. To be done and recorded in TEST-REPORT.md.

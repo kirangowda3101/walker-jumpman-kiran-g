@@ -82,13 +82,13 @@ func _draw() -> void:
 	draw_set_transform(Vector2.ZERO, 0.0, Vector2(signf(facing), 1.0))
 
 	# sword across the back, drawn first so the torso covers its middle
-	draw_line(Vector2(-10, -7), Vector2(-3, -27), ink, 3.0)
-	draw_line(Vector2(-4, -26), Vector2(-2, -29), steel, 2.0)
-
+	draw_line(Vector2(-8, -26), Vector2(-12, -5), ink, 5.0)
+	draw_line(Vector2(-8, -26), Vector2(-12, -5), Color("6f7b8a"), 2.5)
+	draw_rect(Rect2(-10, -28, 4, 2), Color("d9a441"))
 	# headband tail, trailing behind and waving
 	draw_colored_polygon(PackedVector2Array([
-		Vector2(-5, -25), Vector2(-10, -23 + sway),
-		Vector2(-11, -21 + sway), Vector2(-5, -22)
+		Vector2(-5, -26), Vector2(-15, -24 + sway),
+		Vector2(-17, -20 + sway * 1.4), Vector2(-5, -21)
 	]), sash)
 
 	# hood: narrow crown flaring out to the shoulders

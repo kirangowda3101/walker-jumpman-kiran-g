@@ -101,6 +101,155 @@ def headroom(platforms, plat):
     return worst
 
 
+def needed_str(env):
+    return f"{env.apex + PLAYER_H:.0f} px"
+
+
+def clearance_over(platforms, x0, x1, surface_y):
+    """Smallest gap between a surface and anything hanging above it, across a span."""
+    worst = float("inf")
+    for other in platforms:
+        if other["bottom"] <= surface_y - 1 and other["x1"] > x0 and other["x0"] < x1:
+            worst = min(worst, surface_y - other["bottom"])
+    return worst
+
+
+def truncated_reach(env, ceiling_rise, land_rise):
+    """
+    Horizontal reach when a ceiling cuts the jump short.
+
+    The jump is fixed height — player.gd assigns tuning.jump_velocity outright,
+    with no variable-height jump — so the player always rises until either the
+    apex or a ceiling stops them. Godot zeroes upward velocity on contact, so
+    the arc becomes: rise to the ceiling, then fall.
+    """
+    h = min(env.apex, ceiling_rise)
+    if h <= land_rise:
+        return None
+    disc = env.v ** 2 - 2.0 * env.g * h
+    t_up = (env.v - math.sqrt(max(disc, 0.0))) / env.g
+    t_down = math.sqrt(2.0 * (h - land_rise) / env.g)
+    return env.speed * (t_up + t_down), h
+
+
+def ceiling_at(platforms, x, surface_y):
+    """Lowest thing hanging over a point on a walkable surface, as a clearance."""
+    worst = float("inf")
+    for other in platforms:
+        if other["bottom"] <= surface_y - 1 and other["x0"] - PLAYER_W / 2 <= x <= other["x1"] + PLAYER_W / 2:
+            worst = min(worst, surface_y - other["bottom"])
+    return worst
+
+
+def arc(env, ceiling_rise):
+    """
+    The trajectory of one fixed-height jump under a ceiling.
+
+    player.gd assigns tuning.jump_velocity outright — there is no variable-height
+    jump — so the player always rises until the apex or a ceiling stops them.
+    Godot zeroes upward velocity on contact, so a low ceiling clips the arc.
+    Returns (peak_rise, time_to_peak).
+    """
+    h = min(env.apex, max(ceiling_rise, 0.0))
+    disc = env.v ** 2 - 2.0 * env.g * h
+    t_up = (env.v - math.sqrt(max(disc, 0.0))) / env.g
+    return h, t_up
+
+
+def clears_hazard(platforms, env, plat, hx0, hx1, hh):
+    """
+    Is there ANY takeoff point from which the player clears this hazard?
+
+    Scans backwards from the hazard. At each candidate the ceiling overhead sets
+    the peak; the player must get above the hazard before reaching it and stay
+    above until past it, including their own 18 px width.
+    """
+    best = None
+    # A running player cannot take off at one exact pixel. tuning.gd gives a
+    # 6-tick input buffer, which at 60 Hz and 160 px/s is about 16 px of travel,
+    # so a takeoff only counts if the ceiling allows it across that window and
+    # the player is actually on the platform for it.
+    window = 16.0
+    x = hx0 - 4.0
+    while x >= max(plat["x0"], hx0 - env.speed * env.airtime):
+        if x - window < plat["x0"]:
+            x -= 4.0
+            continue
+        clear_window = min(ceiling_at(platforms, x, plat["top"]),
+                           ceiling_at(platforms, x - window, plat["top"]))
+        # the player's head is already PLAYER_H above their feet, so the room
+        # left to rise is the clearance minus their own height
+        peak, t_up = arc(env, clear_window - PLAYER_H)
+        if peak >= hh + 4:
+            # time spent above the hazard's height, given this clipped arc
+            t_to_h = (env.v - math.sqrt(max(env.v ** 2 - 2 * env.g * hh, 0.0))) / env.g
+            t_fall = math.sqrt(2.0 * (peak - hh) / env.g)
+            span = env.speed * ((t_up - t_to_h) + t_fall)
+            needed = (hx1 + PLAYER_W / 2) - (x + env.speed * t_to_h)
+            if span >= needed:
+                margin = (span - needed) / span if span else 0.0
+                if best is None or margin > best[0]:
+                    best = (margin, x, peak)
+        x -= 4.0
+    return best
+
+
+def jump_corridors(platforms, level, env):
+    """
+    Wherever the level FORCES a jump, check that a jump is actually possible.
+
+    A surface can pass the standing-headroom check and still be unplayable:
+    28 px is enough to stand under, but a jump needs room to rise. That is the
+    class of defect standing clearance alone will not catch.
+    """
+    out = []
+
+    for hx, hy, hw, hh in level["hazards"]:
+        plat = None
+        for p in platforms:
+            if abs(p["top"] - (hy + hh)) <= 2 and p["x0"] <= hx and p["x1"] >= hx + hw:
+                plat = p
+                break
+        if plat is None:
+            continue
+        found = clears_hazard(platforms, env, plat, float(hx), float(hx + hw), float(hh))
+        if found is None:
+            out.append({"kind": "hazard", "x": float(hx), "ok": False, "peak": 0.0,
+                        "why": f"no takeoff point clears the {hh:.0f} px hazard at x={hx:.0f}"})
+        else:
+            margin, tx, peak = found
+            out.append({"kind": "hazard", "x": float(hx), "ok": True, "peak": peak,
+                        "why": (f"tight: best takeoff x={tx:.0f}, {margin * 100:.0f}% margin"
+                                if margin < 0.2 else "")})
+
+    for a in platforms:
+        best = None
+        for b in platforms:
+            if b is a or b["x0"] < a["x1"]:
+                continue
+            gap = b["x0"] - a["x1"]
+            if 0 < gap <= 140 and (best is None or gap < best[0]):
+                best = (gap, b)
+        if not best:
+            continue
+        gap, b = best
+        land = a["top"] - b["top"]
+        peak, t_up = arc(env, ceiling_at(platforms, a["x1"] - 8, a["top"]) - PLAYER_H)
+        if peak <= land:
+            out.append({"kind": "gap", "x": a["x1"], "ok": False, "peak": peak,
+                        "why": f"peak {peak:.0f} px under a {land:.0f} px landing"})
+            continue
+        reach = env.speed * (t_up + math.sqrt(2.0 * (peak - land) / env.g))
+        if reach < gap:
+            out.append({"kind": "gap", "x": a["x1"], "ok": False, "peak": peak,
+                        "why": f"reach {reach:.0f} px cannot cross {gap:.0f} px"})
+        else:
+            out.append({"kind": "gap", "x": a["x1"], "ok": True, "peak": peak,
+                        "why": (f"tight: {reach:.0f} px reach for {gap:.0f} px"
+                                if reach < gap / SAFETY else "")})
+    return out
+
+
 def transitions(platforms, env, fall_y):
     """Every ordered pair of platforms, judged reachable or not."""
     results = []
@@ -215,6 +364,24 @@ def main():
             print(f"  P{i:<2} x {p['x0']:.0f}-{p['x1']:.0f} top {p['top']:.0f}   clearance {shown}")
     if not problems and not args.verbose:
         print(f"  all {len(platforms)} surfaces clear {PLAYER_H:.0f} px")
+    print()
+
+    # 1b. Can the player jump where the level forces a jump?
+    print("jump corridors")
+    corridors = jump_corridors(platforms, level, env)
+    bad = [c for c in corridors if not c["ok"]]
+    for c in corridors:
+        if c["ok"] and not c["why"] and not args.verbose:
+            continue
+        state = "BLOCKED" if not c["ok"] else ("TIGHT" if c["why"] else "ok")
+        print(f"  {c['kind']:<7} at x {c['x']:.0f}   peak {c['peak']:.0f} px   {state}")
+        if c["why"]:
+            print(f"          {c['why']}")
+        if not c["ok"]:
+            problems.append(f"forced {c['kind']} jump at x {c['x']:.0f}: {c['why']}")
+    if not bad and not args.verbose:
+        clean = len(corridors) - sum(1 for c in corridors if c["why"])
+        print(f"  {clean} of {len(corridors)} forced-jump sites clear with margin")
     print()
 
     # 2. Judge every transition against the envelope.

@@ -145,9 +145,11 @@ The starter's own design package — `GDD.md`, `LEVEL-DESIGN.md`,
     sha256  a6a46018fdf342300cb94f5dc6886b6c0f2add217da710d8c6a17e9d4bbf329a
 
 **The MP4 is not in this repository.** Per the assignment, all MP4 and MP3
-files are held in course media storage; the link goes here once uploaded:
+files are held outside this repository:
 
-> **Course media storage:** *(link to be added on upload)*
+> **Film:** https://drive.google.com/file/d/1Em5TEtrmVKopzQVVNRjtT0zdUq28tFdq/view?usp=sharing
+> Also attached to the Canvas submission. No designated course media storage was
+> named on the assignment page; the course TA confirmed any accessible location is fine.
 
 [`youtube/claude-liam-walker-jumpman-walkthrough/MEDIA.md`](youtube/claude-liam-walker-jumpman-walkthrough/MEDIA.md)
 is the manifest — every excluded file with its SHA-256, so a copy retrieved

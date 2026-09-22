@@ -187,7 +187,7 @@ func _draw() -> void:
 		draw_line(Vector2(x, 80), Vector2(x, 320), Color("e7e5df"), 1)
 	for y in range(96, 321, 32):
 		draw_line(Vector2(0, y), Vector2(level.width, y), Color("e7e5df"), 1)
-	for x in [100, 470, 770, 1080, 1400]:
+	for x in [100, 470, 770, 1080, 1400, 1720]:
 		draw_colored_polygon(PackedVector2Array([Vector2(x-90,320),Vector2(x+50,180),Vector2(x+190,320)]), Color("e4e8e3"))
 	for entry in level.solids:
 		var r := Rect2(entry[0], entry[1], entry[2], entry[3])
@@ -209,11 +209,14 @@ func _draw() -> void:
 				Vector2(x + step, hy + hh)
 			]), Color("d24e42"))
 	var finish_x: float = level.finish[0]
-	draw_line(Vector2(finish_x+3, 320), Vector2(finish_x+3, 250), ink, 3)
-	draw_colored_polygon(PackedVector2Array([Vector2(finish_x+5,250),Vector2(finish_x+32,260),Vector2(finish_x+5,274)]), Color("287c68"))
+	var finish_top: float = level.finish[1]
+	var finish_base: float = level.finish[1] + level.finish[3]
+	draw_line(Vector2(finish_x+3, finish_base), Vector2(finish_x+3, finish_top), ink, 3)
+	draw_colored_polygon(PackedVector2Array([Vector2(finish_x+5,finish_top),Vector2(finish_x+32,finish_top+10),Vector2(finish_x+5,finish_top+24)]), Color("287c68"))
 	draw_string(font, Vector2(33, 251), "01 / GET MOVING", HORIZONTAL_ALIGNMENT_LEFT, -1, 15, ink)
 	draw_string(font, Vector2(33, 273), "Read the landing. Then jump.", HORIZONTAL_ALIGNMENT_LEFT, -1, 13, ink)
 	draw_string(font, Vector2(474, 227), "02 / MIND THE GAP", HORIZONTAL_ALIGNMENT_LEFT, -1, 15, ink)
-	draw_string(font, Vector2(1000, 205), "03 / TWO WAYS UP", HORIZONTAL_ALIGNMENT_LEFT, -1, 15, ink)
-	draw_string(font, Vector2(1000, 227), "High is faster. Low is safer.", HORIZONTAL_ALIGNMENT_LEFT, -1, 13, ink)
-	draw_string(font, Vector2(finish_x - 38, 225), "FINISH", HORIZONTAL_ALIGNMENT_LEFT, -1, 15, ink)
+	draw_string(font, Vector2(1020, 180), "03 / TWO WAYS UP", HORIZONTAL_ALIGNMENT_LEFT, -1, 15, ink)
+	draw_string(font, Vector2(1020, 202), "Climb early, or run the long way round.", HORIZONTAL_ALIGNMENT_LEFT, -1, 13, ink)
+	draw_string(font, Vector2(finish_x - 38, finish_top - 12), "FINISH", HORIZONTAL_ALIGNMENT_LEFT, -1, 15, ink)
+	draw_string(font, Vector2(1480, 300), "No way up from here. Keep going right.", HORIZONTAL_ALIGNMENT_LEFT, -1, 13, ink)

@@ -1,43 +1,144 @@
-# walker-jumpman — First Steps
+# walker-jumpman-kiran-g
 
-**Playable source prototype · September 10, 2026 · Godot 4.7.2 / GDScript**
+**CSYE 7270, Fall 2026 — Assignment 1: Extend Walker Jumpman**
+Kiran Gowda Ramanagara Jayaram · Godot 4.7.2.stable.official.ed1daf0bf · macOS
 
-Standalone game repository: [nikbearbrown/walker-jumpman](https://github.com/nikbearbrown/walker-jumpman). This checkout contains only this game's source, design package, and test evidence—not the Walker toolkit, Brutalist, or video renders.
+An extension of **[nikbearbrown/walker-jumpman](https://github.com/nikbearbrown/walker-jumpman)**,
+the "First Steps" playable slice. This is not a new game: the starter's movement
+model, session code, HUD, level format and test suites are all retained, and its
+commit history is preserved in this repository so the boundary between the
+original work and mine is visible in `git log`.
 
-Clone with `git clone https://github.com/nikbearbrown/walker-jumpman.git`, then import `walker-jumpman/godot/project.godot` in the regular Godot editor. No .NET runtime or external assets are required. On macOS, the launcher below also works when Godot is installed in Applications; on other platforms, use the editor or `godot --path godot` from the cloned folder.
+---
 
-Double-click [walker-jumpman.command](walker-jumpman.command) to play. Press **Enter** to start; **A/D or arrows** to move, **Space** to jump, **R** to retry, and **Escape/P** to pause. Reach the flag. Retries are unlimited.
+## Run it
 
-![The actual First Steps game, captured during a scripted jump](evidence/screens/03-jump.png)
+Install Godot **4.7.2** (standard build, not .NET) from
+[godotengine.org](https://godotengine.org/download). Then either:
 
-This simple level has two steps, two gaps, one spike hazard, and a finish. It is the control/retry slice, not the full three-zone/cherry design below. See [build results and limitations](BUILD-REPORT.md). To edit, import [godot/project.godot](godot/project.godot) into Godot.
+- Import `godot/project.godot` in the Godot editor and press **F5**, or
+- With Godot in `/Applications`, double-click `walker-jumpman.command`
 
-The first Walker example is a compact 2D platformer built around readable jumps, optional cherries and quick retries. Every new game project uses the `walker-` prefix. The original `jumping-man-godot` recovery collection remains separate and unchanged; it is not included or required here. Historical design references to sibling recovery files refer to the author's local source collection, not files shipped in this repository.
+No .NET runtime, no external assets, no packages.
 
-## Read in this order
+**Controls:** **Enter** to start · **A/D** or arrows to move · **Space** to jump ·
+**R** to retry · **Escape/P** to pause. Reach the flag. Retries are unlimited.
 
-1. [Game brief](GAME-BRIEF.md) — the short player-facing idea and proposed scope.
-2. [Detailed GDD](GDD.md) — sixteen design sections, source evidence, requirements and twenty-two acceptance cases.
-3. [Level design](LEVEL-DESIGN.md) — the three-zone course and its untested geometry.
-4. [Production plan](PRODUCTION-PLAN.md) — twenty-two dependency-ordered tasks across six phases, plus four deferred tasks.
-5. [Playtest plan](PLAYTEST-PLAN.md) — mechanical tests, formative human sessions, evidence and revision rules.
-6. [Asset plan](ASSET-PLAN.md) — original greybox requirements and the provenance boundary.
-7. [Design status](DESIGN-STATUS.json) — machine-readable revision, decisions, pending approvals and honest runtime state.
+---
 
-![Candidate walker-jumpman course map; not a gameplay screenshot](design/level-overview.png)
+## What I changed
 
-[Design consistency review](DESIGN-REVIEW.md) · [Editable SVG map](design/level-overview.svg)
+### Character — a ninja
 
-[Level coordinate data](design/level-01.json) drives this candidate blockout. Counts and geometry can be checked without Godot. Jump reachability, zero-cherry/all-cherry routing, camera behavior and enjoyment have not been tested.
+The starter's player is seven `draw_rect` calls making a uniform 18-wide block.
+Mine is a hooded figure with a tapered head, a mask slit, a sash, a sword slung
+across the back and a headband that trails behind whichever way you face.
 
-## Proposed defaults ready for review
+- The silhouette changes along its height rather than being one slab
+- Three readable states: standing, running, and a distinct airborne tuck
+- Left/right is handled by one `draw_set_transform` canvas mirror rather than
+  per-line coordinate ternaries
+- All original geometric drawing. No imported art, no sprite sheets, no fonts
+  beyond Godot's built-in fallback
 
-Godot 4 with typed GDScript, Compatibility rendering, one three-zone level, twenty optional cherries, one fixed-height jump with small forgiveness windows, hazards, quick retries, keyboard controls and a locally tested Web export. No paid services. No moving-platform dependency in the MVP.
+The 18x28 collider and every value in `tuning.gd` are **unchanged**.
 
-The tested engine is Godot 4.7.2.stable.official.ed1daf0bf. Zelda's reusable prompt and command/workflow specification belong to the separate Walker toolkit and are not dependencies of this game.
+### Level — a branching third zone
 
-## Current boundary
+The level grows from 960 to 1920 wide. Past the starter's two zones, a third
+section offers two ways to the finish, which now sits on a raised shelf.
 
-The full design is still a draft. Bear subsequently authorized **“Build a simple level for walker-jumpman.”** The first slice is implemented and machine-tested; full-design approvals, human playtesting, cherries/settings, and the Web export remain pending. This is a source-code release, not a hosted game or downloadable executable. The build report and test receipts preserve the earlier local-build history.
+- **High route.** Two steps up, then a long runway straight onto the shelf.
+- **Ground route.** Stay low, clear four spike clusters, and discover the flag
+  is unreachable from below. The only climb is past the far east end, and the
+  stepping stone above it sits 96 px over the ground — beyond the 56 px jump
+  ceiling — so it cannot be shortcut. You climb, then hop back west and walk
+  back to the flag.
 
-Next: play this small control/retry loop before expanding the course. The human owns intent, scope, play-feel judgments, and release decisions; AI implements and checks authorized work. The original `/Users/bear/walker-jumpman` stays untouched.
+The ground route is slower because it is physically longer. Measured: **high
+10.1 s, ground 13.6 s**. The solver's optimum is 9.73 s and 11.87 s.
+
+The starter's original section is untouched and still fully playable.
+
+### Presentation fixes
+
+Several drawing coordinates in `session.gd` were hard-coded to the old 960-wide
+level. The background grid, backdrop, hills and the FINISH label now derive from
+the level data. A defect in the hazard drawing — which took x from the data but
+hard-coded y — was fixed so that what the player sees matches what the physics
+checks.
+
+---
+
+## Verification
+
+Three read-only scripts, all standard-library Python 3.
+
+    python3 scripts/check_reachability.py     # geometry and clearance
+    python3 scripts/solve.py routes           # fastest time for each route
+    python3 scripts/solve.py marks            # regenerate the test fixture
+
+`scripts/sim.py` is a tick-accurate replica of `player.gd::_physics_process`.
+It was validated against the engine before being relied on: the engine's own
+test measures a jump rise of 56.07 px and the simulator produces 56.00, and
+across a full scripted route the engine takes 589 ticks to the simulator's 592.
+
+`scripts/solve.py` searches routes over that simulator. It proved that
+completion time in this game is horizontal distance divided by run speed —
+`velocity.x` survives jumps and landings — which is why the level's fork had to
+be built around a forced backtrack rather than around hazards or platform count.
+
+`scripts/check_reachability.py` derives the jump envelope from `tuning.gd` and
+checks standing headroom, forced-jump corridors, every platform transition, and
+whether a spawn-to-finish route exists. Passing a weaker jump makes it fail with
+a specific reason:
+
+    python3 scripts/check_reachability.py --jump-velocity 190
+
+### Engine test suites
+
+    /Applications/Godot.app/Contents/MacOS/Godot --headless --path godot --script res://tests/test_game.gd
+    /Applications/Godot.app/Contents/MacOS/Godot --headless --path godot --script res://tests/test_keyboard.gd
+
+**25 of 25 mechanics checks and 9 of 9 keyboard checks pass.** Both suites write
+timestamped JSON receipts into `evidence/`; the failing runs from development
+are committed alongside the passing ones.
+
+---
+
+## Known limitations
+
+- **No external playtester.** Every human result is my own. Whether a
+  first-time player finds the eastern climb on the ground route is untested.
+- **No pre-change baseline** was captured before modifying the project.
+- **The ground route has no automated coverage.** `route_driver.gd` can only
+  hold the right key, so it cannot drive the backtrack; the fixture covers the
+  high route instead.
+- **The route fixture is tightly coupled to the geometry** and has broken on
+  every level change. It is now generated rather than hand-tuned.
+- **Scope.** At 1920 wide the level is double the starter's, which is more than
+  the assignment asked for.
+
+Full detail in [TEST-REPORT.md](TEST-REPORT.md) section 7.
+
+---
+
+## Documents
+
+| File | Contents |
+|---|---|
+| [CHANGE-BRIEF.md](CHANGE-BRIEF.md) | Predictions written before implementation, with an append-only revision log. Sections 1–5 are deliberately left wrong where reality diverged. |
+| [TEST-REPORT.md](TEST-REPORT.md) | What was tested and observed, including four defects and which method found each. |
+| [FRICTIONAL.md](FRICTIONAL.md) | Honest log of attempts, failures, a wrong diagnosis, and what was not done. |
+| [SOURCES.md](SOURCES.md) | Starter credit, tooling, and the human/AI authorship split. |
+
+The starter's own design package — `GDD.md`, `LEVEL-DESIGN.md`,
+`PLAYTEST-PLAN.md`, `BUILD-REPORT.md` and the rest — is retained unmodified.
+
+---
+
+## Film
+
+*(To be added.)* Produced with the course-provided Brutalist
+`godot-walkthrough` workflow using the `walker` modifier. The final URL,
+filename and SHA-256 checksum will be recorded here and in `SUBMISSION.md`.

@@ -280,9 +280,13 @@ built the level. Named as a limitation below.
 
 ## 7. Honest limitations
 
-1. **No external playtester.** Every human result here is my own. The assignment
-   asks for another person's actual feedback and I have not collected it. This is
-   the largest gap in this report.
+1. **No external playtester.** Every human result in this report is my own. The
+   assignment asks for another person's actual feedback and I was not able to
+   arrange it. This is the largest gap in my verification. The specific
+   consequence is that the wayfinding question in Revision 3 stays open: I know
+   the eastern climb is findable because I built the level and know where it is,
+   which is exactly the knowledge a first-time player does not have. I have not
+   invented a playtester or presented my own sessions as anyone else's.
 2. **No recorded pre-change baseline.** Covered in section 1. A process mistake.
 3. **The ground route has no automated coverage.** `route_driver.gd` cannot move
    left, so it cannot drive the backtrack. The ground route is verified by my own

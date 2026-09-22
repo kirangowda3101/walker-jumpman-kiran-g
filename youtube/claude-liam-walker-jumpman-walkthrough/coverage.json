@@ -1,0 +1,374 @@
+{
+  "schema_version": 1,
+  "game": {
+    "name": "walker-jumpman-kiran-g",
+    "build_id": "f115c6bda779d53a8531bdb2a29323a609a8b217a386893c92f848f656544771"
+  },
+  "captures": {
+    "run-01": {
+      "path": "capture/run-01.mp4",
+      "sha256": "ff0f0c31d9a664a3dbf4cce2750d603db8383fcc5118e2d9c47419e7cc2bca4e",
+      "build_id": "f115c6bda779d53a8531bdb2a29323a609a8b217a386893c92f848f656544771",
+      "method": "scripted-input",
+      "input_log": "capture/run-01-inputs.jsonl"
+    },
+    "run-02": {
+      "path": "capture/run-02.mp4",
+      "sha256": "b498f0d094e89e382b0da4a8e80f19ec6124f478abfbe727606e1c9bf161c6bb",
+      "build_id": "f115c6bda779d53a8531bdb2a29323a609a8b217a386893c92f848f656544771",
+      "method": "scripted-input",
+      "input_log": "capture/run-02-inputs.jsonl"
+    },
+    "run-03": {
+      "path": "capture/run-03.mp4",
+      "sha256": "26d89e7ff978a6b8eda0600ac8c3d6245ca1cfa49b1eeda3378719f3b9b8e356",
+      "build_id": "f115c6bda779d53a8531bdb2a29323a609a8b217a386893c92f848f656544771",
+      "method": "scripted-input",
+      "input_log": "capture/run-03-inputs.jsonl"
+    },
+    "run-04": {
+      "path": "capture/run-04.mp4",
+      "sha256": "b3eabef6246d0fb54e59b0b3052f2ddb098ed81fe8fa479637ddac36ee7a7ee2",
+      "build_id": "f115c6bda779d53a8531bdb2a29323a609a8b217a386893c92f848f656544771",
+      "method": "scripted-input",
+      "input_log": "capture/run-04-inputs.jsonl"
+    },
+    "run-05": {
+      "path": "capture/run-05.mp4",
+      "sha256": "5e71654355dca84d27f5b5cf2351487de17732b9ba80281bb0b24768a2b8d04f",
+      "build_id": "f115c6bda779d53a8531bdb2a29323a609a8b217a386893c92f848f656544771",
+      "method": "scripted-input",
+      "input_log": "capture/run-05-inputs.jsonl"
+    }
+  },
+  "features": [
+    {
+      "id": "start-from-menu",
+      "status": "implemented",
+      "evidence": [{
+        "capture": "run-01", "beat_id": "B02",
+        "start_s": 0.2, "action_s": 1.2333, "end_s": 2.2,
+        "observation": "Title panel reads 'First steps. Real jumps.' with 'ENTER / START'. Enter clears the panel, the dimming scrim over the level lifts and the HUD timer starts counting from 00.0s.",
+        "riff": "The menu is drawn by the HUD over a live level rather than as a separate scene — the course is already sitting there behind the scrim, which is why start costs no load."
+      }]
+    },
+    {
+      "id": "start-from-mouse",
+      "status": "implemented",
+      "evidence": [{
+        "capture": "run-02", "beat_id": "B04",
+        "start_s": 0.2, "action_s": 0.9, "end_s": 1.5,
+        "observation": "A left click inside the green START button begins the session; no key was pressed in this take until after the run was underway.",
+        "riff": "The button is a hit-tested rectangle in session.gd, not a Control — it works, but it is the one input in the game that the keyboard tests cannot reach."
+      }]
+    },
+    {
+      "id": "move-accelerate-decelerate",
+      "status": "implemented",
+      "evidence": [{
+        "capture": "run-01", "beat_id": "B02",
+        "start_s": 1.3333, "action_s": 1.8, "end_s": 2.6,
+        "observation": "Held D accelerates to the 160 px/s cap; the key is released at 1.80 s and the figure glides roughly 5 px further before stopping, the legs settling from the running cycle to a level standing pose.",
+        "riff": "Deceleration is 1920 against an acceleration of 1280, so stopping is faster than starting. That asymmetry is what makes the character feel planted rather than slippery."
+      }]
+    },
+    {
+      "id": "facing-mirror",
+      "status": "implemented",
+      "evidence": [{
+        "capture": "run-01", "beat_id": "B02",
+        "start_s": 2.2, "action_s": 2.5333, "end_s": 3.1,
+        "observation": "Pressing A flips the entire figure: the sword moves to the other shoulder, the headband trails the opposite way and the eye-slit pupil swaps side.",
+        "riff": "Source fact, from player.gd: this is one draw_set_transform canvas mirror, not per-limb coordinate flips. Everything is authored facing right, so no element can forget to turn around."
+      }]
+    },
+    {
+      "id": "west-boundary-clamp",
+      "status": "implemented",
+      "evidence": [{
+        "capture": "run-04", "beat_id": "B03",
+        "start_s": 0.9, "action_s": 1.5, "end_s": 2.4,
+        "observation": "Holding A walks the figure to x=10 and it stops there, still leaning left, for the rest of the hold. The input log records velocity.x pinned at -160 the whole time.",
+        "riff": "Source fact: player.gd clamps position.x to 10 after move_and_slide rather than letting the invisible wall stop the body, so the velocity never resets. It looks identical on screen and it is not the same thing."
+      }]
+    },
+    {
+      "id": "jump-fixed-height",
+      "status": "implemented",
+      "evidence": [{
+        "capture": "run-01", "beat_id": "B02",
+        "start_s": 3.0, "action_s": 3.2667, "end_s": 4.0,
+        "observation": "Space from the ground at x=140 lifts the player onto the 16 px step at x=160; the airborne pose is a distinct tuck, front knee up and back leg trailing.",
+        "riff": "The jump is a single velocity assignment with no variable height — tapping and holding produce the same arc. Cheap to reason about, and it is exactly why a low ceiling can make a gap unjumpable rather than merely awkward."
+      }]
+    },
+    {
+      "id": "no-double-jump",
+      "status": "implemented",
+      "evidence": [{
+        "capture": "run-04", "beat_id": "B03",
+        "start_s": 5.05, "action_s": 5.2667, "end_s": 5.6,
+        "observation": "A second Space press at the apex of the coyote jump changes nothing: velocity.y stays positive at +32 and the descent continues uninterrupted.",
+        "riff": "The jump opportunity is consumed until the next floor contact, so the press is simply thrown away. Note this press is deliberately far from the ground — inside the last six ticks it would have been banked, not discarded."
+      }]
+    },
+    {
+      "id": "coyote-time",
+      "status": "implemented",
+      "evidence": [{
+        "capture": "run-04", "beat_id": "B03",
+        "start_s": 4.6, "action_s": 4.9, "end_s": 5.2,
+        "observation": "The player runs off the slab edge at x=448 with no jump pressed and is already falling. Space is pressed 3 physics ticks after the last ground contact (log: ground tick 291, press tick 294) and the jump fires from mid-air, clearing the 64 px gap.",
+        "riff": "A still frame cannot prove this — the evidence is the tick gap in the input log. Six ticks is a tenth of a second of grace, and it is the difference between 'I mistimed it' and 'the game ignored me'."
+      }]
+    },
+    {
+      "id": "input-buffer",
+      "status": "implemented",
+      "evidence": [{
+        "capture": "run-04", "beat_id": "B03",
+        "start_s": 7.0, "action_s": 7.3333, "end_s": 7.9,
+        "observation": "Space is pressed while still airborne at y=273.5, five ticks before the feet reach the block at y=288 (press tick 441, contact tick 446). The jump fires on the contact frame itself, velocity.y = -320.",
+        "riff": "Coyote time forgives a late press, the buffer forgives an early one. Same six-tick budget on both sides of the ground contact — symmetric, which is why the control never feels like it is arguing with you."
+      }]
+    },
+    {
+      "id": "solid-collision",
+      "status": "implemented",
+      "evidence": [{
+        "capture": "run-04", "beat_id": "B03",
+        "start_s": 5.3, "action_s": 5.5667, "end_s": 6.3,
+        "observation": "The coyote jump lands flush against the left face of the 32 px block at x=576 and horizontal movement stops dead while D is still held; backing off west frees it.",
+        "riff": "Honest note about this take: a late coyote jump carries further than a normal one, so this pin was not staged — it is what the driver ran into, and the run-up had to be rebuilt around it."
+      }]
+    },
+    {
+      "id": "gap-crossing",
+      "status": "implemented",
+      "evidence": [
+        {
+          "capture": "run-01", "beat_id": "B02",
+          "start_s": 4.8, "action_s": 5.0667, "end_s": 5.8,
+          "observation": "Jump at x=426 carries the player over the 64 px gap between the first and second ground slabs and lands cleanly on the far side.",
+          "riff": "The gap is 64 wide against a flat reach of about 107, so it is generous by design. This is zone 01 teaching the arc before zone 03 charges for it."
+        },
+        {
+          "capture": "run-01", "beat_id": "B02",
+          "start_s": 6.6, "action_s": 6.9, "end_s": 7.6,
+          "observation": "Jump at x=713 crosses the second, 48 px gap onto the third slab.",
+          "riff": "Two gaps, both cleared with the same input and no change in speed — which is the first visible hint that horizontal velocity survives the whole arc."
+        }
+      ]
+    },
+    {
+      "id": "spike-hazard",
+      "status": "implemented",
+      "evidence": [
+        {
+          "capture": "run-01", "beat_id": "B02",
+          "start_s": 4.0, "action_s": 4.2333, "end_s": 4.9,
+          "observation": "The zone-01 spike cluster at x=320 is jumped and survived; the three red triangles pass underneath the airborne figure.",
+          "riff": "The hazard trigger is three triangular collision polygons matching the drawn shape, not an oversized box — so the near miss you see is the near miss the physics saw."
+        },
+        {
+          "capture": "run-02", "beat_id": "B04",
+          "start_s": 2.2, "action_s": 2.6667, "end_s": 3.3,
+          "observation": "Walking into the same cluster without jumping kills: the run freezes, a panel reads 'Watch the spikes' / 'Back at the start in a moment.', and RETRIES ticks from 00 to 01.",
+          "riff": "The death message names the cause rather than saying 'you died'. Small thing, but it is the difference between a player learning the rule and a player guessing at it."
+        }
+      ]
+    },
+    {
+      "id": "fall-death",
+      "status": "implemented",
+      "evidence": [{
+        "capture": "run-02", "beat_id": "B04",
+        "start_s": 6.3, "action_s": 7.0, "end_s": 7.7,
+        "observation": "Running off the first slab without jumping drops the player past the fall boundary at y=430; the panel reads 'Missed the landing' and RETRIES goes to 02.",
+        "riff": "Two different deaths, two different messages, from the same resolve_contacts call. The boundary is a y threshold, not a collider, so there is nothing to clip through."
+      }]
+    },
+    {
+      "id": "auto-respawn",
+      "status": "implemented",
+      "evidence": [{
+        "capture": "run-02", "beat_id": "B04",
+        "start_s": 2.8, "action_s": 3.5, "end_s": 4.2,
+        "observation": "About half a second after the spike death the player is back at spawn and playable again, with no prompt and no keypress.",
+        "riff": "0.55 seconds is short enough that you keep your intent and long enough to read the message. The cost of a mistake here is the walk back, not a menu."
+      }]
+    },
+    {
+      "id": "retry-counter",
+      "status": "implemented",
+      "evidence": [{
+        "capture": "run-02", "beat_id": "B04",
+        "start_s": 2.3, "action_s": 2.6667, "end_s": 7.6,
+        "observation": "The HUD RETRIES field reads 00 at the start of the take, 01 immediately after the spike death and 02 after the fall death.",
+        "riff": "The counter is the only score in the game and it only counts deaths. Nothing is lost, nothing is gated — it is a record of the attempt, not a punishment."
+      }]
+    },
+    {
+      "id": "manual-restart",
+      "status": "implemented",
+      "evidence": [{
+        "capture": "run-02", "beat_id": "B04",
+        "start_s": 9.2, "action_s": 9.7, "end_s": 10.5,
+        "observation": "R returns the player to spawn mid-run and the RETRIES field stays on 02 — it does not increment.",
+        "riff": "Deliberate, not a bug: restart_attempt() is called straight from the input handler, while deaths += 1 lives in resolve_contacts and only runs on an actual death. Choosing to start over is not the same as failing."
+      }]
+    },
+    {
+      "id": "pause-resume",
+      "status": "implemented",
+      "evidence": [{
+        "capture": "run-02", "beat_id": "B04",
+        "start_s": 11.2, "action_s": 11.6, "end_s": 13.6,
+        "observation": "Escape freezes the run mid-air and shows 'Take a breath.' with 'R: restart attempt / M: main menu' and 'ENTER / RESUME'; Enter returns the player to exactly the position and state it left.",
+        "riff": "Pausing mid-jump and resuming into the same arc is the tell that this is a state flag on the player, not the engine's scene pause. It also clears the buffered jump on resume, so you do not leap the instant you unpause."
+      }]
+    },
+    {
+      "id": "pause-key-p",
+      "status": "implemented",
+      "evidence": [{
+        "capture": "run-02", "beat_id": "B04",
+        "start_s": 13.7, "action_s": 13.9667, "end_s": 14.5,
+        "observation": "P opens the same pause panel as Escape.",
+        "riff": "Two keys for one action, and the HUD only advertises Escape. Harmless redundancy, but the control line on screen is not a complete list of the bindings."
+      }]
+    },
+    {
+      "id": "main-menu-key-m",
+      "status": "implemented",
+      "evidence": [{
+        "capture": "run-02", "beat_id": "B04",
+        "start_s": 14.4, "action_s": 14.7333, "end_s": 15.7,
+        "observation": "From the pause panel, M returns to the title panel; the retry count from the abandoned run is still on the HUD until a new session starts.",
+        "riff": "M is only live from pause and from the completion screen, so you cannot drop out of a live run by fumbling a key."
+      }]
+    },
+    {
+      "id": "focus-loss-pause",
+      "status": "implemented",
+      "evidence": [{
+        "capture": "run-05", "beat_id": "B05",
+        "start_s": 1.2, "action_s": 1.9, "end_s": 3.4,
+        "observation": "Mid-run, a second engine window takes focus. The root window emits focus_exited and the game pauses itself: the pause panel appears, the timer holds and the figure does not move again in the take.",
+        "riff": "This is the one behaviour the other four takes had to switch off to record reliably, which is its own kind of evidence — the auto-pause is aggressive enough to interrupt an unattended machine."
+      }]
+    },
+    {
+      "id": "camera-follow",
+      "status": "implemented",
+      "evidence": [{
+        "capture": "run-01", "beat_id": "B02",
+        "start_s": 3.0, "action_s": 7.0, "end_s": 12.0,
+        "observation": "The view scrolls with the player from the spawn area all the way to the finish shelf at x=1620, holding the figure left of centre.",
+        "riff": "The camera limit is derived from the level's own width field, which is why doubling the level needed no camera change at all. The author predicted this would break; it was already parameterised."
+      }]
+    },
+    {
+      "id": "hud-readouts",
+      "status": "implemented",
+      "evidence": [{
+        "capture": "run-01", "beat_id": "B02",
+        "start_s": 0.5, "action_s": 6.0, "end_s": 12.5,
+        "observation": "The HUD shows the title, the control line, a green progress bar, 'RETRIES 00' and a running timer. The progress bar reaches 100% at roughly 6 s of this take and stays full for the remaining third of the run, while the player is still short of the flag.",
+        "riff": "That full bar is a real defect, and it is inherited: hud.gd computes progress as (x - 64) / 852, which was correct for the starter's 960-wide level. The level is now 1920 wide and the flag is at 1620, so the bar saturates at x=916 and tells you nothing after that. Everything else on the HUD reads from live state and is accurate."
+      }]
+    },
+    {
+      "id": "route-fork",
+      "status": "implemented",
+      "evidence": [{
+        "capture": "run-03", "beat_id": "B06",
+        "start_s": 5.5, "action_s": 6.9, "end_s": 8.2,
+        "observation": "Same opening as run-01, but at x=1014 the player does not take the step up at x=1060 and continues along the ground slab instead — the same geometry, a different route.",
+        "riff": "The fork is a choice not to climb, not a wall or a door. Nothing stops you going up; the level just has to make going along cost something."
+      }]
+    },
+    {
+      "id": "low-headroom-traverse",
+      "status": "implemented",
+      "evidence": [{
+        "capture": "run-03", "beat_id": "B06",
+        "start_s": 6.9, "action_s": 7.35, "end_s": 7.9,
+        "observation": "The player walks underneath the stepping stone at x=1060 with the platform passing just above the hood. Geometry: platform underside y=288 over ground y=320 is 32 px of clearance for a 28 px collider.",
+        "riff": "Four pixels of margin. Standing clearance and jump clearance are different numbers in this game, and conflating them is exactly the defect class the author's reachability checker had to be extended to catch."
+      }]
+    },
+    {
+      "id": "wayfinding-hint",
+      "status": "implemented",
+      "evidence": [{
+        "capture": "run-03", "beat_id": "B06",
+        "start_s": 9.6, "action_s": 10.3333, "end_s": 11.2,
+        "observation": "On the ground route the finish flag is visible on the shelf overhead and cannot be reached from below; a line of level text at x=1480 reads 'No way up from here. Keep going right.'",
+        "riff": "The hint is the design admitting the puzzle is not self-evident. Whether it is enough is untested — the only person who has played this already knows where the climb is."
+      }]
+    },
+    {
+      "id": "ground-route-backtrack",
+      "status": "implemented",
+      "evidence": [{
+        "capture": "run-03", "beat_id": "B06",
+        "start_s": 11.2, "action_s": 12.0333, "end_s": 13.2,
+        "observation": "The player runs past the flag to the step at x=1790, past the east end of the playable course, climbs it, turns west and hops back along the shelf to reach the finish at x=1620.",
+        "riff": "This backtrack is the entire reason the two routes differ in time. Horizontal velocity survives jumps and landings in this engine, so route time is distance over speed — the only lever left is making a player walk ground they have already covered."
+      }]
+    },
+    {
+      "id": "completion-and-time",
+      "status": "implemented",
+      "evidence": [
+        {
+          "capture": "run-01", "beat_id": "B02",
+          "start_s": 12.0, "action_s": 12.5667, "end_s": 14.0,
+          "observation": "Touching the flag freezes the run and shows 'Course complete.' with '11.3 seconds / 0 retries' and 'ENTER / PLAY AGAIN'. High route, scripted input.",
+          "riff": "Eleven three against the solver's 9.73 optimum. The gap is the driver being conservative on takeoff marks, not the level being slow."
+        },
+        {
+          "capture": "run-03", "beat_id": "B06",
+          "start_s": 12.8, "action_s": 13.0333, "end_s": 14.0,
+          "observation": "The ground route reaches the same flag and completes in 12.3 seconds with 0 retries.",
+          "riff": "One second of daylight between the routes here; the solver puts the optimal gap at 2.13 s. Either way the ground route costs more, and it costs more because it is longer."
+        }
+      ]
+    },
+    {
+      "id": "replay",
+      "status": "implemented",
+      "evidence": [{
+        "capture": "run-01", "beat_id": "B02",
+        "start_s": 14.0, "action_s": 14.5667, "end_s": 15.6,
+        "observation": "Enter on the completion panel starts a fresh attempt: the player is back at spawn, the timer restarts at 00.0s, RETRIES shows 00 and the progress bar is empty again.",
+        "riff": "Replay resets the session counters, not just the position. The engine suite asserts this is idempotent across repeats, which is the kind of thing that quietly rots the moment a level adds state."
+      }]
+    },
+    {
+      "id": "cherries",
+      "status": "planned",
+      "reason": "GDD MECH-03 / FEAT-05 specify twenty optional collectibles with a HUD counter. Not present in godot/levels/first_steps.json and no collection code exists in session.gd or player.gd. CHANGE-BRIEF section 2 lists a single collectible as a stretch goal that was dropped.",
+      "evidence": []
+    },
+    {
+      "id": "moving-platform",
+      "status": "planned",
+      "reason": "GDD MECH-05 describes a rideable moving platform and marks it a follow-up, not MVP-blocking. No kinematic bodies exist in the project; every solid is a static rectangle from the level JSON.",
+      "evidence": []
+    },
+    {
+      "id": "audio",
+      "status": "planned",
+      "reason": "The GDD proposes optional sound with a visual equivalent for jump and collection. The project contains no audio files, no AudioStreamPlayer and no mixer; SOURCES.md records 'no audio'. Nothing was muted for this film because there is nothing to mute.",
+      "evidence": []
+    },
+    {
+      "id": "settings-persistence",
+      "status": "planned",
+      "reason": "GDD section 7 scopes a settings file persisting mute and key bindings. There is no options screen, no save path and no user:// write anywhere in the project; the input map is rebuilt in code on every launch by session.gd::_setup_input.",
+      "evidence": []
+    }
+  ]
+}

@@ -1,0 +1,153 @@
+{
+  "video": "claude-liam-walker-jumpman-walkthrough",
+  "metadata": {
+    "title": "The Fork That Wasn't.",
+    "slug": "claude-liam-walker-jumpman-walkthrough",
+    "topic": "WALKER JUMPMAN \u00b7 GODOT WALKTHROUGH",
+    "register": "Teardown",
+    "audience": "Claude",
+    "brand": "claude-liam",
+    "persona": "Liam (in for Bear)",
+    "voice": "am_onyx",
+    "engine": "kokoro",
+    "voice_kokoro": "am_onyx",
+    "palette": "claude",
+    "style_preset": "claude",
+    "ground": "#FAF9F5",
+    "greeting": "Namaste, Liam",
+    "folderLabel": "@NikBearBrown",
+    "in_for_bear": true,
+    "aspect_ratio": "16:9",
+    "fps": 30,
+    "fit": "crop",
+    "skill": "godot-waikthrough",
+    "modifier": "walker",
+    "game": "walker-jumpman-kiran-g",
+    "game_build_id": "f115c6bda779d53a8531bdb2a29323a609a8b217a386893c92f848f656544771",
+    "capture_method": "scripted-input",
+    "approvals": {},
+    "build": {
+      "at": "2026-09-22T16:24:43",
+      "cut": "review",
+      "filled": 10,
+      "of": 10,
+      "slates": [],
+      "skin_warnings": []
+    }
+  },
+  "source_of_truth": "beat_sheet.json \u2014 edit the sheet, not this file",
+  "beats_total": 10,
+  "beats_open": 0,
+  "beats": [
+    {
+      "beat_id": "B00",
+      "status": "filled",
+      "on_disk": "media/B00.mp4",
+      "method": "remotion",
+      "who": "pipeline",
+      "scene_hint": null,
+      "prompt": null,
+      "slot": "media/B00.mp4",
+      "label": "Namaste \u2014 this is Liam, in for Bear. Here is the ask, rebuilt for the camera: take a design document"
+    },
+    {
+      "beat_id": "B01",
+      "status": "filled",
+      "on_disk": "media/B01.mp4",
+      "method": "remotion",
+      "who": "pipeline",
+      "scene_hint": null,
+      "prompt": null,
+      "slot": "media/B01.mp4",
+      "label": "What shipped is one level, twice the width it started at. A third zone offers two ways up to the sam"
+    },
+    {
+      "beat_id": "B02",
+      "status": "filled",
+      "on_disk": "media/B02.mp4",
+      "method": "ai-video-prompt",
+      "who": "human",
+      "scene_hint": null,
+      "prompt": "One level, start to finish. Enter begins it; let go of the key and he glides to a stop. Two gaps, a spike cluster, a two-step climb onto the runway, out to the ",
+      "slot": "media/B02.mp4",
+      "label": "One level, start to finish. Enter begins it; let go of the key and he glides to a stop. Two gaps, a "
+    },
+    {
+      "beat_id": "B03",
+      "status": "filled",
+      "on_disk": "media/B03.mp4",
+      "method": "ai-video-prompt",
+      "who": "human",
+      "scene_hint": null,
+      "prompt": "West edge: position clamped, velocity not. Jump three ticks after the ledge \u2014 coyote. Again at the apex, nothing. Five ticks early, banked.",
+      "slot": "media/B03.mp4",
+      "label": "West edge: position clamped, velocity not. Jump three ticks after the ledge \u2014 coyote. Again at the a"
+    },
+    {
+      "beat_id": "B04",
+      "status": "filled",
+      "on_disk": "media/B04.mp4",
+      "method": "ai-video-prompt",
+      "who": "human",
+      "scene_hint": null,
+      "prompt": "The mouse works too. Spikes kill \u2014 retries one, back at spawn in half a second. Off the edge: missed the landing, retries two. R restarts, and the counter stays",
+      "slot": "media/B04.mp4",
+      "label": "The mouse works too. Spikes kill \u2014 retries one, back at spawn in half a second. Off the edge: missed"
+    },
+    {
+      "beat_id": "B05",
+      "status": "filled",
+      "on_disk": "media/B05.mp4",
+      "method": "ai-video-prompt",
+      "who": "human",
+      "scene_hint": null,
+      "prompt": "Another window takes focus and the game stops itself. Nothing lost, nothing advanced.",
+      "slot": "media/B05.mp4",
+      "label": "Another window takes focus and the game stops itself. Nothing lost, nothing advanced."
+    },
+    {
+      "beat_id": "B06",
+      "status": "filled",
+      "on_disk": "media/B06.mp4",
+      "method": "ai-video-prompt",
+      "who": "human",
+      "scene_hint": null,
+      "prompt": "Stay low: thirty-two pixels of headroom under the climb, for a twenty-eight pixel player. Four to spare. The flag is right there, and unreachable. The only way ",
+      "slot": "media/B06.mp4",
+      "label": "Stay low: thirty-two pixels of headroom under the climb, for a twenty-eight pixel player. Four to sp"
+    },
+    {
+      "beat_id": "BVDT",
+      "status": "filled",
+      "on_disk": "media/BVDT.mp4",
+      "method": "remotion",
+      "who": "pipeline",
+      "scene_hint": null,
+      "prompt": null,
+      "slot": "media/BVDT.mp4",
+      "label": "Verdict. Everything the level claims to do, it does: the movement model, both forgiveness windows on"
+    },
+    {
+      "beat_id": "BHTF",
+      "status": "filled",
+      "on_disk": "media/BHTF.mp4",
+      "method": "remotion",
+      "who": "pipeline",
+      "scene_hint": null,
+      "prompt": null,
+      "slot": "media/BHTF.mp4",
+      "label": "Your turn. Here is the prompt \u2014 read it with me. 'Use Walker on my Godot platformer: replace the rou"
+    },
+    {
+      "beat_id": "BOUT",
+      "status": "filled",
+      "on_disk": "media/BOUT.mp4",
+      "method": "remotion",
+      "who": "pipeline",
+      "scene_hint": null,
+      "prompt": null,
+      "slot": "media/BOUT.mp4",
+      "label": "The Fork That Wasn't. At Nik Bear Brown."
+    }
+  ]
+}

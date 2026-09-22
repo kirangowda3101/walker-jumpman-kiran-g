@@ -153,13 +153,47 @@ things I observed on my own machine.
 
 ## Film
 
-*(To be completed once the explainer is rendered.)*
+**The Fork That Wasn't.** — 2:47, 3840x2160, 30 fps, rendered 22 September 2026.
 
-The film is produced with the course-provided Brutalist `godot-walkthrough`
-workflow using the `walker` modifier. AI narration is used, as the assignment
-permits. Details of what is AI-generated in the film — narration, script drafting,
-beat sheet — and what is captured gameplay will be recorded here alongside the
-final filename and SHA-256 checksum.
+    youtube/claude-liam-walker-jumpman-walkthrough/exports/landscape/claude-liam-walker-jumpman-walkthrough.mp4
+    sha256  a6a46018fdf342300cb94f5dc6886b6c0f2add217da710d8c6a17e9d4bbf329a
+
+Produced with the course-provided Brutalist `godot-walkthrough` workflow using
+the `walker` modifier. Its own credits are in
+`youtube/claude-liam-walker-jumpman-walkthrough/SOURCES.md`; the short version:
+
+**Captured gameplay (real engine output).** All 61.7 s of gameplay is a real
+Godot 4.7.2 run of this project, captured at native 3840x2160 across five
+takes. The game source under `godot/` was not modified; capture ran against a
+copy with one added `capture_driver.gd`, which is committed with the reel. The
+driver drives the game through its real input path and never uses the
+`test_control` / `test_axis` / `test_jump_pressed` hooks that `route_driver.gd`
+relies on. Each capture's SHA-256 is recorded in `coverage.json`, and the five
+gameplay slots in the finished film are byte-identical to those captures.
+
+**AI-generated.** The narration voice (local Kokoro-82M, `am_onyx` — free, no
+API); the script and beat sheet; the capture driver; the jump-mark search for
+the ground route; the five Claude bookend scenes (Remotion, deterministic,
+seeded); and the reel's documents.
+
+**Declared, not hidden.** The opening Walker prompt is an *illustrative
+reconstruction* — no Walker transcript exists for this project, since it
+extends an existing starter — and it is labelled as such on screen, in the
+narration and in the reel's `PROMPTS.md`. No fictional build log or progress
+receipt appears anywhere in the film.
+
+**Not claimed.** No human playtested the game for the film. The captures are
+scripted input, labelled `scripted-input` in `coverage.json`, and the missing
+external playtester is stated out loud in the film's verdict. The only human
+play evidence for this project remains my own, in `TEST-REPORT.md` section 5.
+
+**One thing the film found that these documents did not.** `godot/ui/hud.gd:24`
+computes the progress bar as `(x - 64) / 852` — the starter's 960-wide span.
+The level is now 1920 wide with the finish at 1620, so the bar fills at x=916
+and stays full for the rest of the run. `hud.gd` is listed as unchanged above,
+and that is accurate: the defect is inherited from the starter and my
+presentation-fix pass on `session.gd` never reached the HUD. It is in the
+film's verdict and in the reel's `FACTCHECK.md`.
 
 ---
 

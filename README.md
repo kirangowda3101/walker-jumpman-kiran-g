@@ -139,6 +139,44 @@ The starter's own design package — `GDD.md`, `LEVEL-DESIGN.md`,
 
 ## Film
 
-*(To be added.)* Produced with the course-provided Brutalist
-`godot-walkthrough` workflow using the `walker` modifier. The final URL,
-filename and SHA-256 checksum will be recorded here and in `SUBMISSION.md`.
+**The Fork That Wasn't.** — 2:47, 3840x2160, 30 fps.
+
+    claude-liam-walker-jumpman-walkthrough.mp4
+    sha256  a6a46018fdf342300cb94f5dc6886b6c0f2add217da710d8c6a17e9d4bbf329a
+
+**The MP4 is not in this repository.** Per the assignment, all MP4 and MP3
+files are held in course media storage; the link goes here once uploaded:
+
+> **Course media storage:** *(link to be added on upload)*
+
+[`youtube/claude-liam-walker-jumpman-walkthrough/MEDIA.md`](youtube/claude-liam-walker-jumpman-walkthrough/MEDIA.md)
+is the manifest — every excluded file with its SHA-256, so a copy retrieved
+from course storage can be verified byte-for-byte against this repository.
+
+Produced with the course-provided Brutalist `godot-walkthrough` workflow using
+the `walker` modifier. Narration is Liam (local Kokoro `am_onyx`); no paid API
+was used.
+
+All gameplay is real engine output captured for this film — five scripted-input
+runs at native 4K, hashed in
+[`coverage.json`](youtube/claude-liam-walker-jumpman-walkthrough/coverage.json)
+and documented in
+[`CAPTURE.md`](youtube/claude-liam-walker-jumpman-walkthrough/CAPTURE.md).
+**Nothing under `godot/` was modified to make it**; capture ran against a copy
+with one added driver script, which is committed alongside the captures. The
+driver uses the real input path (`Input.parse_input_event` and
+`Viewport.push_input`), not the `test_control` hooks the test suites use.
+
+The film shows 28 implemented features and names 4 GDD features that were never
+built. It also reports one defect that is **not** recorded elsewhere in this
+repository: `godot/ui/hud.gd:24` still computes the progress bar as
+`(x - 64) / 852`, the starter's 960-wide span, so the bar saturates at x=916 of
+a 1920-wide level and is uninformative for the last third of every run. The
+presentation-fix pass that made `session.gd` data-driven did not reach the HUD.
+
+The captures are scripted input and the film says so out loud; they are not a
+playtest, and the absence of an external playtester is stated in the verdict.
+
+Full reel, evidence and QC: [`youtube/claude-liam-walker-jumpman-walkthrough/`](youtube/claude-liam-walker-jumpman-walkthrough/)
+(`RIFF.md`, `FACTCHECK.md`, `SHOTLIST.md`, `PROMPTS.md`, `_qc/REPORT.md`).
+The YouTube URL will be recorded here and in `SUBMISSION.md` if the film is published.

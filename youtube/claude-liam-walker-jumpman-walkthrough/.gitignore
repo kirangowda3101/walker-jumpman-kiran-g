@@ -1,0 +1,31 @@
+# ---------------------------------------------------------------------------
+# Course requirement: no media in GitHub.
+# Every .mp4 and .mp3 lives in course media storage and is linked from the
+# repository README. MEDIA.md is the manifest: every excluded file with its
+# SHA-256, so an uploaded copy can be verified against this repo.
+#
+# Nothing that makes the film auditable is excluded: the beat sheet, the
+# coverage contract, every input log, the capture driver, the export receipt
+# and all reports stay in git.
+#
+# NOTE: coverage.json records the SHA-256 of each capture, so on a fresh clone
+# `./art godot-waikthrough --check` fails with "Missing/empty evidence" until
+# capture/*.mp4 is restored from course media storage. The evidence chain
+# survives the media leaving git; it just cannot be re-checked without it.
+# ---------------------------------------------------------------------------
+*.mp4
+*.mp3
+
+# The root .gitignore excludes exports/ wholesale. Re-include just the
+# hash-bound export receipt — git cannot re-include a file whose parent
+# directory is excluded, so the path has to be opened up level by level.
+!exports/
+exports/*
+!exports/landscape/
+exports/landscape/*
+!exports/landscape/*.verified.json
+
+# Regenerable build intermediates — rebuild with BUILD-PROMPT.md.
+clips/
+qc-sheet.png
+_qc/frames/

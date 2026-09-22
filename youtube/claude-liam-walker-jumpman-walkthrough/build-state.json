@@ -1,0 +1,29 @@
+{
+  "status": "ready",
+  "output": "/Users/kiran/Documents/walker-jumpman-kiran-g/youtube/claude-liam-walker-jumpman-walkthrough/exports/landscape/claude-liam-walker-jumpman-walkthrough.mp4",
+  "sha256": "a6a46018fdf342300cb94f5dc6886b6c0f2add217da710d8c6a17e9d4bbf329a",
+  "duration_s": 167.4,
+  "input_sha256": {
+    "/Users/kiran/Documents/walker-jumpman-kiran-g/youtube/claude-liam-walker-jumpman-walkthrough/media/B00.mp4": "48fdd736293fdd358e383f6ae254552422f64e181148f51525f91da5f4def8d3",
+    "/Users/kiran/Documents/walker-jumpman-kiran-g/youtube/claude-liam-walker-jumpman-walkthrough/media/B01.mp4": "492902218a72f92f8e41ad014d5e021d49dec92b5cf46828a97764db74dd3854",
+    "/Users/kiran/Documents/walker-jumpman-kiran-g/youtube/claude-liam-walker-jumpman-walkthrough/media/B02.mp4": "ff0f0c31d9a664a3dbf4cce2750d603db8383fcc5118e2d9c47419e7cc2bca4e",
+    "/Users/kiran/Documents/walker-jumpman-kiran-g/youtube/claude-liam-walker-jumpman-walkthrough/media/B03.mp4": "b3eabef6246d0fb54e59b0b3052f2ddb098ed81fe8fa479637ddac36ee7a7ee2",
+    "/Users/kiran/Documents/walker-jumpman-kiran-g/youtube/claude-liam-walker-jumpman-walkthrough/media/B04.mp4": "b498f0d094e89e382b0da4a8e80f19ec6124f478abfbe727606e1c9bf161c6bb",
+    "/Users/kiran/Documents/walker-jumpman-kiran-g/youtube/claude-liam-walker-jumpman-walkthrough/media/B05.mp4": "5e71654355dca84d27f5b5cf2351487de17732b9ba80281bb0b24768a2b8d04f",
+    "/Users/kiran/Documents/walker-jumpman-kiran-g/youtube/claude-liam-walker-jumpman-walkthrough/media/B06.mp4": "26d89e7ff978a6b8eda0600ac8c3d6245ca1cfa49b1eeda3378719f3b9b8e356",
+    "/Users/kiran/Documents/walker-jumpman-kiran-g/youtube/claude-liam-walker-jumpman-walkthrough/media/BHTF.mp4": "5ba03670884686acdfb8d6b258a3c9f0a7a9a080464bb8519adee668c43e91e3",
+    "/Users/kiran/Documents/walker-jumpman-kiran-g/youtube/claude-liam-walker-jumpman-walkthrough/media/BOUT.mp4": "2f40891f2791676652f564e4e3d50c73e515ad677ef889e605658f5020bb9189",
+    "/Users/kiran/Documents/walker-jumpman-kiran-g/youtube/claude-liam-walker-jumpman-walkthrough/media/BVDT.mp4": "b736c1772ff6562bc65064d9f47138d607fadf4d2c3dde8c2e4bfd2e82a4da87",
+    "/Users/kiran/Documents/walker-jumpman-kiran-g/youtube/claude-liam-walker-jumpman-walkthrough/mp3/beat-B00.mp3": "fa1ea7566b7f52164f67b72b1f0a8d05d1d1fc01594372d4363e1bd4ab7a9500",
+    "/Users/kiran/Documents/walker-jumpman-kiran-g/youtube/claude-liam-walker-jumpman-walkthrough/mp3/beat-B01.mp3": "dc8fd1ce090cbd4340171c4c5a6aecfc3c14462e864b9ce94a2b1d347f856411",
+    "/Users/kiran/Documents/walker-jumpman-kiran-g/youtube/claude-liam-walker-jumpman-walkthrough/mp3/beat-B02.mp3": "8364f0002fd0da4d9f6ae32b70d40f71f3d9f8b9ca1158d322289b53c710f6a0",
+    "/Users/kiran/Documents/walker-jumpman-kiran-g/youtube/claude-liam-walker-jumpman-walkthrough/mp3/beat-B03.mp3": "ea19e4f13013e597d85110673c082b5a6d55bcab568edbcfaff025a38748b3d5",
+    "/Users/kiran/Documents/walker-jumpman-kiran-g/youtube/claude-liam-walker-jumpman-walkthrough/mp3/beat-B04.mp3": "e616bd06dcc016e60c220ac8832a8d6754c21cef84a642620e274dba3908c643",
+    "/Users/kiran/Documents/walker-jumpman-kiran-g/youtube/claude-liam-walker-jumpman-walkthrough/mp3/beat-B05.mp3": "3ff1bd632e41337dec3730226d93ab8476fbc2d8566a8b5b6211f00ee6c81170",
+    "/Users/kiran/Documents/walker-jumpman-kiran-g/youtube/claude-liam-walker-jumpman-walkthrough/mp3/beat-B06.mp3": "1b446afbf31598c67e38c97aee825ad53112ad207fef4ce6bf1e7cd709499a50",
+    "/Users/kiran/Documents/walker-jumpman-kiran-g/youtube/claude-liam-walker-jumpman-walkthrough/mp3/beat-BHTF.mp3": "52f00f436e7cbbaeedb89dacd07db8aa342be6b37f1c794dc1313a7bcfa295a1",
+    "/Users/kiran/Documents/walker-jumpman-kiran-g/youtube/claude-liam-walker-jumpman-walkthrough/mp3/beat-BOUT.mp3": "8bcd98775bd9588786e1f1762fec290addc529d6fd174381cbcd9c964c5a0d3b",
+    "/Users/kiran/Documents/walker-jumpman-kiran-g/youtube/claude-liam-walker-jumpman-walkthrough/mp3/beat-BVDT.mp3": "444fc15e564b5b37d5bfa7a17c8d42c6a82b536effa202c45bc2c1a8f54347be"
+  },
+  "at": "2026-09-22T20:28:16.966844+00:00"
+}

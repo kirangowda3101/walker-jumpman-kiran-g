@@ -1,0 +1,761 @@
+{
+  "metadata": {
+    "title": "The Fork That Wasn't.",
+    "slug": "claude-liam-walker-jumpman-walkthrough",
+    "topic": "WALKER JUMPMAN · GODOT WALKTHROUGH",
+    "register": "Teardown",
+    "audience": "Claude",
+    "brand": "claude-liam",
+    "persona": "Liam (in for Bear)",
+    "voice": "am_onyx",
+    "engine": "kokoro",
+    "voice_kokoro": "am_onyx",
+    "palette": "claude",
+    "style_preset": "claude",
+    "ground": "#FAF9F5",
+    "greeting": "Namaste, Liam",
+    "folderLabel": "@NikBearBrown",
+    "in_for_bear": true,
+    "aspect_ratio": "16:9",
+    "fps": 30,
+    "fit": "crop",
+    "skill": "godot-waikthrough",
+    "modifier": "walker",
+    "game": "walker-jumpman-kiran-g",
+    "game_build_id": "f115c6bda779d53a8531bdb2a29323a609a8b217a386893c92f848f656544771",
+    "capture_method": "scripted-input",
+    "approvals": {},
+    "build": {
+      "at": "2026-09-22T16:28:16",
+      "cut": "master",
+      "filled": 10,
+      "of": 10,
+      "slates": [],
+      "skin_warnings": []
+    }
+  },
+  "beats": [
+    {
+      "beat_id": "B00",
+      "act": "cold open — the Walker ask",
+      "narration_text": "Namaste — this is Liam, in for Bear. Here is the ask, rebuilt for the camera: take a design document about a hooded runner, two gaps, a spike field, unlimited retries and a branching last zone, and hand me a playable Godot project. That prompt is an illustrative reconstruction, not a saved transcript. What sits underneath it is real — a student extension of Walker Jumpman — and we are going to play all of it.",
+      "voice": "am_onyx",
+      "engine": "kokoro",
+      "estimated_duration_s": 20.9,
+      "shot": {
+        "type": "REMOTION",
+        "lane": "ask",
+        "show": [
+          {
+            "at": "0.0",
+            "event": "Claude composer, spark and greeting 'Namaste, Liam'"
+          },
+          {
+            "at": "0.2",
+            "event": "the Walker prompt types itself into the composer"
+          },
+          {
+            "at": "0.6",
+            "event": "send arms; running indicator reads 'reading GDD.md — first-steps slice…'"
+          },
+          {
+            "at": "0.75",
+            "event": "three output lines land, the first of them labelling the prompt a reconstruction"
+          }
+        ],
+        "remotion": {
+          "pattern": "ClaudeComposerAsk",
+          "props": {
+            "greeting": "Namaste, Liam",
+            "topic": "WALKER JUMPMAN · GODOT WALKTHROUGH",
+            "segment": "The Fork That Wasn't.",
+            "command": "Please use Walker to convert my game design document about a compact 2D precision platformer — a hooded runner crossing two gaps and a spike field on a short greybox course, unlimited instant retries, and a branching final zone that makes the player choose a route to the flag — into a playable Godot project.",
+            "runningText": "reading GDD.md — first-steps slice…",
+            "output": [
+              "Illustrative reconstruction of the ask. Not a saved transcript.",
+              "Shipped slice: one level, 1920 px wide, 12 solids, 5 spike clusters.",
+              "Starter: nikbearbrown/walker-jumpman · extended by Kiran Gowda Ramanagara Jayaram."
+            ],
+            "folderLabel": "@NikBearBrown",
+            "modelLabel": "Fable 5",
+            "effortLabel": "High"
+          },
+          "rendered": {
+            "out": "media/B00.mp4",
+            "at": "2026-09-22T19:57:26.027180+00:00"
+          }
+        }
+      },
+      "actual_duration_s": 20.9,
+      "audio_file": "mp3/beat-B00.mp3",
+      "narration_window_s": {
+        "lead_silence": 0.0,
+        "voice": 20.885,
+        "trailing_silence": 0.015
+      },
+      "render_duration_s": 20.9,
+      "build": {
+        "status": "VIDEO",
+        "src": "media/B00.mp4",
+        "filled_by": "remotion:ClaudeComposerAsk",
+        "at": "2026-09-22T16:28:16"
+      }
+    },
+    {
+      "beat_id": "B01",
+      "act": "what was actually built",
+      "narration_text": "What shipped is one level, twice the width it started at. A third zone offers two ways up to the same flag. And that fork does not trade time for risk. It can only trade distance.",
+      "voice": "am_onyx",
+      "engine": "kokoro",
+      "estimated_duration_s": 12.6,
+      "lead_silence_s": 0.8,
+      "shot": {
+        "type": "REMOTION",
+        "lane": "bookend",
+        "show": [
+          {
+            "at": "0.0",
+            "event": "cursor blinks on the cream page, nothing written yet"
+          },
+          {
+            "at": "0.15",
+            "event": "'Level one, extended: a third zone' types out"
+          },
+          {
+            "at": "0.45",
+            "event": "'with two ways up to the same flag.' types out"
+          },
+          {
+            "at": "0.7",
+            "event": "'The fork trades time for risk.' types out; 'risk' turns terracotta"
+          },
+          {
+            "at": "0.85",
+            "event": "the writer stops, deletes 'risk', and types 'distance'"
+          }
+        ],
+        "remotion": {
+          "pattern": "BrutalistHesitantWriter",
+          "props": {
+            "text": "Level one, extended: a third zone,\ntwo ways up to the same flag.\nThe fork trades time for risk.",
+            "triggerWords": "risk",
+            "replacementWords": "distance",
+            "face": "serif",
+            "fontSize": 104,
+            "lineSpacing": 1.25,
+            "align": "center",
+            "seed": "walker-jumpman-fork-2026",
+            "mistakeRate": 3,
+            "hesitateWithin": 2,
+            "hesitateBetween": 10,
+            "charMs": 34,
+            "jitter": 25,
+            "durationSeconds": 12.6
+          },
+          "rendered": {
+            "out": "media/B01.mp4",
+            "at": "2026-09-22T20:22:51.878874+00:00"
+          }
+        }
+      },
+      "actual_duration_s": 12.6,
+      "audio_file": "mp3/beat-B01.mp3",
+      "narration_window_s": {
+        "lead_silence": 0.8,
+        "voice": 10.219,
+        "trailing_silence": 1.581
+      },
+      "render_duration_s": 12.6,
+      "build": {
+        "status": "VIDEO",
+        "src": "media/B01.mp4",
+        "filled_by": "remotion:BrutalistHesitantWriter",
+        "at": "2026-09-22T16:28:16"
+      },
+      "qc": {
+        "sparse_by_design": true,
+        "sparse_reason": "BrutalistHesitantWriter accumulates the overview token by token, so a mid-beat frame is mostly cream by design; the frame is only full once the third line and its correction have been typed. Type was raised from 88 to 104 so the finished sentence reads from across a room."
+      }
+    },
+    {
+      "beat_id": "B02",
+      "act": "body — the whole level, start to finish",
+      "narration_text": "One level, start to finish. Enter begins it; let go of the key and he glides to a stop. Two gaps, a spike cluster, a two-step climb onto the runway, out to the flag. Eleven point three seconds, no retries.",
+      "voice": "am_onyx",
+      "engine": "kokoro",
+      "actual_duration_s": 15.666666666666666,
+      "estimated_duration_s": 15.666666666666666,
+      "capture": "run-01",
+      "shot": {
+        "type": "VIDEO",
+        "lane": "capture",
+        "source": "own",
+        "treatment": "none",
+        "show": [
+          {
+            "at": "0.00",
+            "event": "title panel: 'First steps. Real jumps.' over the level"
+          },
+          {
+            "at": "0.08",
+            "event": "Enter — the panel clears, the timer starts"
+          },
+          {
+            "at": "0.14",
+            "event": "runs right, key released, decelerates to a standing pose"
+          },
+          {
+            "at": "0.18",
+            "event": "faces left; sword, headband and pupil all swap sides"
+          },
+          {
+            "at": "0.21",
+            "event": "jumps the 16px step, then the spike cluster, then both gaps"
+          },
+          {
+            "at": "0.55",
+            "event": "two-step climb, then the long runway"
+          },
+          {
+            "at": "0.80",
+            "event": "touches the flag — 'Course complete. 11.3 seconds / 0 retries'"
+          },
+          {
+            "at": "0.93",
+            "event": "Enter — timer, retries and progress bar reset to zero"
+          }
+        ]
+      },
+      "audio_file": "mp3/beat-B02.mp3",
+      "narration_window_s": {
+        "lead_silence": 0.4,
+        "voice": 12.331,
+        "trailing_silence": 2.936
+      },
+      "render_duration_s": 15.666666666666666,
+      "build": {
+        "status": "VIDEO",
+        "src": "media/B02.mp4",
+        "filled_by": "media",
+        "at": "2026-09-22T16:28:16"
+      },
+      "qc": {
+        "full_bleed": true,
+        "full_bleed_reason": "Unmodified engine capture at 3840x2160. The game renders its backdrop, ground plane and HUD bands edge to edge, so content crossing the title-safe inset is the game filling the screen, not a card overflowing. Nothing was cropped, scaled or moved.",
+        "contrast_regions": [
+          {
+            "label": "HUD title and control line",
+            "box": [
+              0.03,
+              0.02,
+              0.92,
+              0.16
+            ]
+          },
+          {
+            "label": "HUD retry counter and timer",
+            "box": [
+              0.03,
+              0.92,
+              0.92,
+              0.99
+            ]
+          }
+        ],
+        "contrast_reason": "Whole-frame contrast is dragged under the threshold by the game's own dimming scrim over the play area on its menu, pause and completion panels. The scrim is the game's design, not a rendering fault. The essential on-screen text is the HUD band top and bottom, which sits outside the scrim and is measured here. The panels themselves are dark navy on near-white and were inspected frame by frame at 4K (see _qc/REPORT.md)."
+      }
+    },
+    {
+      "beat_id": "B03",
+      "act": "body — the edges of the control model",
+      "narration_text": "West edge: position clamped, velocity not. Jump three ticks after the ledge — coyote. Again at the apex, nothing. Five ticks early, banked.",
+      "voice": "am_onyx",
+      "engine": "kokoro",
+      "actual_duration_s": 9.233333333333333,
+      "estimated_duration_s": 9.233333333333333,
+      "capture": "run-04",
+      "shot": {
+        "type": "VIDEO",
+        "lane": "capture",
+        "source": "own",
+        "treatment": "none",
+        "show": [
+          {
+            "at": "0.10",
+            "event": "walks left into the west boundary and stops dead at x=10 while still pressing left"
+          },
+          {
+            "at": "0.50",
+            "event": "runs off the slab edge with no jump pressed — already falling"
+          },
+          {
+            "at": "0.53",
+            "event": "jump pressed 3 ticks late; he rises out of mid-air and clears the gap"
+          },
+          {
+            "at": "0.57",
+            "event": "jump pressed again at the apex — nothing happens, he keeps falling"
+          },
+          {
+            "at": "0.79",
+            "event": "jump pressed 5 ticks before touchdown; the jump fires on the contact frame"
+          }
+        ]
+      },
+      "audio_file": "mp3/beat-B03.mp3",
+      "narration_window_s": {
+        "lead_silence": 0.3,
+        "voice": 8.171,
+        "trailing_silence": 0.763
+      },
+      "render_duration_s": 9.233333333333333,
+      "build": {
+        "status": "VIDEO",
+        "src": "media/B03.mp4",
+        "filled_by": "media",
+        "at": "2026-09-22T16:28:16"
+      },
+      "qc": {
+        "full_bleed": true,
+        "full_bleed_reason": "Unmodified engine capture at 3840x2160. The game renders its backdrop, ground plane and HUD bands edge to edge, so content crossing the title-safe inset is the game filling the screen, not a card overflowing. Nothing was cropped, scaled or moved.",
+        "contrast_regions": [
+          {
+            "label": "HUD title and control line",
+            "box": [
+              0.03,
+              0.02,
+              0.92,
+              0.16
+            ]
+          },
+          {
+            "label": "HUD retry counter and timer",
+            "box": [
+              0.03,
+              0.92,
+              0.92,
+              0.99
+            ]
+          }
+        ],
+        "contrast_reason": "Whole-frame contrast is dragged under the threshold by the game's own dimming scrim over the play area on its menu, pause and completion panels. The scrim is the game's design, not a rendering fault. The essential on-screen text is the HUD band top and bottom, which sits outside the scrim and is measured here. The panels themselves are dark navy on near-white and were inspected frame by frame at 4K (see _qc/REPORT.md)."
+      }
+    },
+    {
+      "beat_id": "B04",
+      "act": "body — failure, recovery, and the menus",
+      "narration_text": "The mouse works too. Spikes kill — retries one, back at spawn in half a second. Off the edge: missed the landing, retries two. R restarts, and the counter stays at two. Escape pauses, P pauses, M exits.",
+      "voice": "am_onyx",
+      "engine": "kokoro",
+      "actual_duration_s": 15.866666666666667,
+      "estimated_duration_s": 15.866666666666667,
+      "capture": "run-02",
+      "shot": {
+        "type": "VIDEO",
+        "lane": "capture",
+        "source": "own",
+        "treatment": "none",
+        "show": [
+          {
+            "at": "0.06",
+            "event": "the START button is clicked, not keyed — the session begins"
+          },
+          {
+            "at": "0.17",
+            "event": "walks into the spikes: 'Watch the spikes', RETRIES 01"
+          },
+          {
+            "at": "0.22",
+            "event": "respawn at the start, unprompted, about half a second later"
+          },
+          {
+            "at": "0.44",
+            "event": "runs off the first slab: 'Missed the landing', RETRIES 02"
+          },
+          {
+            "at": "0.61",
+            "event": "R — back at spawn, and RETRIES stays on 02"
+          },
+          {
+            "at": "0.73",
+            "event": "Escape — 'Take a breath.' / 'ENTER / RESUME'"
+          },
+          {
+            "at": "0.83",
+            "event": "Enter resumes exactly where he stood"
+          },
+          {
+            "at": "0.88",
+            "event": "P pauses as well; M drops back to the title panel"
+          }
+        ]
+      },
+      "audio_file": "mp3/beat-B04.mp3",
+      "narration_window_s": {
+        "lead_silence": 1.0,
+        "voice": 11.968,
+        "trailing_silence": 2.899
+      },
+      "render_duration_s": 15.866666666666667,
+      "build": {
+        "status": "VIDEO",
+        "src": "media/B04.mp4",
+        "filled_by": "media",
+        "at": "2026-09-22T16:28:16"
+      },
+      "qc": {
+        "full_bleed": true,
+        "full_bleed_reason": "Unmodified engine capture at 3840x2160. The game renders its backdrop, ground plane and HUD bands edge to edge, so content crossing the title-safe inset is the game filling the screen, not a card overflowing. Nothing was cropped, scaled or moved.",
+        "contrast_regions": [
+          {
+            "label": "HUD title and control line",
+            "box": [
+              0.03,
+              0.02,
+              0.92,
+              0.16
+            ]
+          },
+          {
+            "label": "HUD retry counter and timer",
+            "box": [
+              0.03,
+              0.92,
+              0.92,
+              0.99
+            ]
+          }
+        ],
+        "contrast_reason": "Whole-frame contrast is dragged under the threshold by the game's own dimming scrim over the play area on its menu, pause and completion panels. The scrim is the game's design, not a rendering fault. The essential on-screen text is the HUD band top and bottom, which sits outside the scrim and is measured here. The panels themselves are dark navy on near-white and were inspected frame by frame at 4K (see _qc/REPORT.md)."
+      }
+    },
+    {
+      "beat_id": "B05",
+      "act": "body — focus loss",
+      "narration_text": "Another window takes focus and the game stops itself. Nothing lost, nothing advanced.",
+      "voice": "am_onyx",
+      "engine": "kokoro",
+      "actual_duration_s": 6.066666666666666,
+      "estimated_duration_s": 6.066666666666666,
+      "capture": "run-05",
+      "shot": {
+        "type": "VIDEO",
+        "lane": "capture",
+        "source": "own",
+        "treatment": "none",
+        "show": [
+          {
+            "at": "0.13",
+            "event": "playing, running right, the window has focus"
+          },
+          {
+            "at": "0.31",
+            "event": "a second window takes focus — mid-stride, the pause panel appears"
+          },
+          {
+            "at": "0.45",
+            "event": "the timer holds; the figure does not move for the rest of the take"
+          }
+        ]
+      },
+      "audio_file": "mp3/beat-B05.mp3",
+      "narration_window_s": {
+        "lead_silence": 0.2,
+        "voice": 5.483,
+        "trailing_silence": 0.384
+      },
+      "render_duration_s": 6.066666666666666,
+      "build": {
+        "status": "VIDEO",
+        "src": "media/B05.mp4",
+        "filled_by": "media",
+        "at": "2026-09-22T16:28:16"
+      },
+      "qc": {
+        "full_bleed": true,
+        "full_bleed_reason": "Unmodified engine capture at 3840x2160. The game renders its backdrop, ground plane and HUD bands edge to edge, so content crossing the title-safe inset is the game filling the screen, not a card overflowing. Nothing was cropped, scaled or moved.",
+        "contrast_regions": [
+          {
+            "label": "HUD title and control line",
+            "box": [
+              0.03,
+              0.02,
+              0.92,
+              0.16
+            ]
+          },
+          {
+            "label": "HUD retry counter and timer",
+            "box": [
+              0.03,
+              0.92,
+              0.92,
+              0.99
+            ]
+          }
+        ],
+        "contrast_reason": "Whole-frame contrast is dragged under the threshold by the game's own dimming scrim over the play area on its menu, pause and completion panels. The scrim is the game's design, not a rendering fault. The essential on-screen text is the HUD band top and bottom, which sits outside the scrim and is measured here. The panels themselves are dark navy on near-white and were inspected frame by frame at 4K (see _qc/REPORT.md)."
+      }
+    },
+    {
+      "beat_id": "B06",
+      "act": "body — the ground route and the backtrack",
+      "narration_text": "Stay low: thirty-two pixels of headroom under the climb, for a twenty-eight pixel player. Four to spare. The flag is right there, and unreachable. The only way up is past the east end — climb, turn, come back. Twelve point three.",
+      "voice": "am_onyx",
+      "engine": "kokoro",
+      "actual_duration_s": 14.866666666666667,
+      "estimated_duration_s": 14.866666666666667,
+      "capture": "run-03",
+      "shot": {
+        "type": "VIDEO",
+        "lane": "capture",
+        "source": "own",
+        "treatment": "none",
+        "show": [
+          {
+            "at": "0.05",
+            "event": "same opening, same jumps — then he does not take the climb at x=1060"
+          },
+          {
+            "at": "0.46",
+            "event": "walks underneath the climb at x=1060; 32px of clearance over a 28px player, and the platform passes just over his hood"
+          },
+          {
+            "at": "0.60",
+            "event": "four spike clusters cleared under a ceiling too low for a full jump"
+          },
+          {
+            "at": "0.69",
+            "event": "the flag is visible overhead; on the ground the level reads 'No way up from here. Keep going right.'"
+          },
+          {
+            "at": "0.79",
+            "event": "climbs the step past the east end of the level"
+          },
+          {
+            "at": "0.84",
+            "event": "turns west and hops back along the shelf"
+          },
+          {
+            "at": "0.88",
+            "event": "reaches the flag — 12.3 seconds, 0 retries"
+          }
+        ]
+      },
+      "audio_file": "mp3/beat-B06.mp3",
+      "narration_window_s": {
+        "lead_silence": 1.2,
+        "voice": 12.139,
+        "trailing_silence": 1.528
+      },
+      "render_duration_s": 14.866666666666667,
+      "build": {
+        "status": "VIDEO",
+        "src": "media/B06.mp4",
+        "filled_by": "media",
+        "at": "2026-09-22T16:28:16"
+      },
+      "qc": {
+        "full_bleed": true,
+        "full_bleed_reason": "Unmodified engine capture at 3840x2160. The game renders its backdrop, ground plane and HUD bands edge to edge, so content crossing the title-safe inset is the game filling the screen, not a card overflowing. Nothing was cropped, scaled or moved.",
+        "contrast_regions": [
+          {
+            "label": "HUD title and control line",
+            "box": [
+              0.03,
+              0.02,
+              0.92,
+              0.16
+            ]
+          },
+          {
+            "label": "HUD retry counter and timer",
+            "box": [
+              0.03,
+              0.92,
+              0.92,
+              0.99
+            ]
+          }
+        ],
+        "contrast_reason": "Whole-frame contrast is dragged under the threshold by the game's own dimming scrim over the play area on its menu, pause and completion panels. The scrim is the game's design, not a rendering fault. The essential on-screen text is the HUD band top and bottom, which sits outside the scrim and is measured here. The panels themselves are dark navy on near-white and were inspected frame by frame at 4K (see _qc/REPORT.md)."
+      }
+    },
+    {
+      "beat_id": "BVDT",
+      "act": "verdict",
+      "narration_text": "Verdict. Everything the level claims to do, it does: the movement model, both forgiveness windows on tick evidence, both deaths and the cheap retry, pause, menu, completion, replay — and both routes completable, eleven point three and twelve point three seconds under scripted input. One defect we found on screen: the progress bar still divides by the old nine-sixty level, so it fills up around x nine sixteen and then lies for the rest of the run. Untested: nobody outside the author has played this, so whether a stranger finds the eastern climb is an open question. And cherries, moving platforms and audio are design document only. Not built — and the slice does not pretend otherwise.",
+      "voice": "am_onyx",
+      "engine": "kokoro",
+      "estimated_duration_s": 36.9,
+      "shot": {
+        "type": "REMOTION",
+        "lane": "bookend",
+        "show": [
+          {
+            "at": "0.05",
+            "event": "artifact page opens: 'Walker Jumpman — extended slice'"
+          },
+          {
+            "at": "0.15",
+            "event": "the WORKS lines land one at a time as the voice names them"
+          },
+          {
+            "at": "0.55",
+            "event": "the DEFECT line lands on 'progress bar'"
+          },
+          {
+            "at": "0.75",
+            "event": "UNTESTED and NOT BUILT close the page"
+          }
+        ],
+        "remotion": {
+          "pattern": "ClaudeVerdictArtifact",
+          "props": {
+            "artifactTitle": "Verdict",
+            "artifactHeading": "Walker Jumpman — extended slice",
+            "brandLabel": "@NikBearBrown",
+            "artifactLines": [
+              "WORKS — move, stop, mirror; fixed jump, no double jump, west clamp",
+              "WORKS — coyote 6 ticks and input buffer 6 ticks, on tick evidence",
+              "WORKS — spike and fall deaths, auto respawn, R without a retry",
+              "WORKS — Esc/P pause, M menu, focus-loss pause, completion, replay",
+              "WORKS — both routes completable: 11.3 s high, 12.3 s ground",
+              "DEFECT — progress bar divides by the old 960 level; full at x=916",
+              "UNTESTED — no external playtester; the eastern climb is unproven",
+              "NOT BUILT — cherries, moving platform, audio: design document only"
+            ]
+          },
+          "rendered": {
+            "out": "media/BVDT.mp4",
+            "at": "2026-09-22T19:59:30.143939+00:00"
+          }
+        }
+      },
+      "actual_duration_s": 36.9,
+      "audio_file": "mp3/beat-BVDT.mp3",
+      "narration_window_s": {
+        "lead_silence": 0.0,
+        "voice": 36.858,
+        "trailing_silence": 0.042
+      },
+      "render_duration_s": 36.9,
+      "build": {
+        "status": "VIDEO",
+        "src": "media/BVDT.mp4",
+        "filled_by": "remotion:ClaudeVerdictArtifact",
+        "at": "2026-09-22T16:28:16"
+      }
+    },
+    {
+      "beat_id": "BHTF",
+      "act": "your turn handoff",
+      "narration_text": "Your turn. Here is the prompt — read it with me. 'Use Walker on my Godot platformer: replace the route fixture's right-only driver with one that takes a timed axis sequence, then generate and verify a fixture that drives the ground route's backtrack. Prove it by failing when I weaken jump velocity.' That last sentence is the whole point. A fixture that can only ever pass tells you nothing; one you can break on demand is evidence. This project's ground route is verified by a human and by a simulator, but not by a test — and that is the gap worth closing. Liam, in for Bear.",
+      "voice": "am_onyx",
+      "engine": "kokoro",
+      "estimated_duration_s": 31.3,
+      "shot": {
+        "type": "REMOTION",
+        "lane": "ask",
+        "show": [
+          {
+            "at": "0.0",
+            "event": "composer returns, greeting reads 'Your turn.'"
+          },
+          {
+            "at": "0.1",
+            "event": "the prompt types itself as the voice reads it"
+          },
+          {
+            "at": "0.6",
+            "event": "running indicator reads 'paste this into Claude…'"
+          }
+        ],
+        "remotion": {
+          "pattern": "ClaudeComposerAsk",
+          "props": {
+            "greeting": "Your turn.",
+            "topic": "WALKER JUMPMAN · GODOT WALKTHROUGH",
+            "segment": "The Fork That Wasn't.",
+            "command": "Use Walker on my Godot platformer: replace the route fixture's right-only driver with one that takes a timed axis sequence, then generate and verify a fixture that drives the ground route's backtrack. Prove it by failing when I weaken jump_velocity.",
+            "runningText": "paste this into Claude…",
+            "folderLabel": "@NikBearBrown",
+            "modelLabel": "Fable 5",
+            "effortLabel": "High"
+          },
+          "rendered": {
+            "out": "media/BHTF.mp4",
+            "at": "2026-09-22T20:00:33.473520+00:00"
+          }
+        }
+      },
+      "actual_duration_s": 31.3,
+      "audio_file": "mp3/beat-BHTF.mp3",
+      "narration_window_s": {
+        "lead_silence": 0.0,
+        "voice": 31.29,
+        "trailing_silence": 0.01
+      },
+      "render_duration_s": 31.3,
+      "build": {
+        "status": "VIDEO",
+        "src": "media/BHTF.mp4",
+        "filled_by": "remotion:ClaudeComposerAsk",
+        "at": "2026-09-22T16:28:16"
+      }
+    },
+    {
+      "beat_id": "BOUT",
+      "act": "outro",
+      "kind": "outro_voice",
+      "narration_text": "The Fork That Wasn't. At Nik Bear Brown.",
+      "voice": "am_onyx",
+      "engine": "kokoro",
+      "estimated_duration_s": 4.0,
+      "tail_hold_s": 1.0,
+      "shot": {
+        "type": "REMOTION",
+        "lane": "bookend",
+        "show": [
+          {
+            "at": "0.0",
+            "event": "title card: 'The Fork That Wasn't.'"
+          },
+          {
+            "at": "0.35",
+            "event": "@NikBearBrown beneath it"
+          },
+          {
+            "at": "0.55",
+            "event": "slug-seeded crisp mascot under the handle; 1 s silent tail hold"
+          }
+        ],
+        "remotion": {
+          "pattern": "ClaudeTitleOutro",
+          "props": {
+            "title": "The Fork That Wasn't.",
+            "slug": "claude-liam-walker-jumpman-walkthrough"
+          },
+          "rendered": {
+            "out": "media/BOUT.mp4",
+            "at": "2026-09-22T20:00:50.549171+00:00"
+          }
+        }
+      },
+      "actual_duration_s": 4.0,
+      "audio_file": "mp3/beat-BOUT.mp3",
+      "narration_window_s": {
+        "lead_silence": 0.0,
+        "voice": 2.987,
+        "trailing_silence": 1.013
+      },
+      "render_duration_s": 4.0,
+      "build": {
+        "status": "VIDEO",
+        "src": "media/BOUT.mp4",
+        "filled_by": "remotion:ClaudeTitleOutro",
+        "at": "2026-09-22T16:28:16"
+      }
+    }
+  ]
+}

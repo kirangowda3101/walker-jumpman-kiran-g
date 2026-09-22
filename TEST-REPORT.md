@@ -5,9 +5,10 @@
 **Engine:** Godot 4.7.2.stable.official.ed1daf0bf
 **OS:** macOS, Apple M4
 **Source revision under test:** see SUBMISSION.md for the exact commit SHA
-**Level under test:** `godot/levels/first_steps.json`, width 1520, finish at x=1480
+**Level under test:** `godot/levels/first_steps.json` — width 1920, finish at (1620, 168)
 
-Every result below was observed. Nothing in this document is predicted, assumed, or reconstructed from what the code looks like it should do. Where a check was not performed, it says so.
+Every result below was observed. Nothing here is predicted or inferred from what
+the code looks like it should do. Where a check was not performed, it says so.
 
 ---
 
@@ -18,183 +19,296 @@ Run from the repository root:
     /Applications/Godot.app/Contents/MacOS/Godot --headless --path godot --script res://tests/test_game.gd
     /Applications/Godot.app/Contents/MacOS/Godot --headless --path godot --script res://tests/test_keyboard.gd
 
-Both suites write timestamped JSON receipts into `evidence/` on every run. Those receipts are committed, including the failing ones.
+Both suites write timestamped JSON receipts into `evidence/` on every run. All
+receipts are committed, including the failing ones.
 
-### Mechanics suite — `test_game.gd`
+**Current state: 25 of 25 mechanics checks pass, 9 of 9 keyboard checks pass.**
 
-| Run | Result | Note |
-|---|---|---|
-| First run, after character and level changes | 25 checks / 1 failure | `complete-real-route` FAIL |
-| After adding jump mark 1230 | 25 / 1 | still FAIL, different death |
-| After moving mark to 1222 | 25 / 1 | still FAIL, different death |
-| After adding mark 1290 | **25 / 0** | PASS |
-| After raising the first high platform 8 px | **25 / 0** | PASS, unchanged |
-
-### Keyboard suite — `test_keyboard.gd`
-
-9 checks, all PASS, on every run: enter-start, keyboard-move, keyboard-jump, escape-pause, enter-resume, r-retry, enter-replay, pause-main-menu, menu-start-again.
+The mechanics suite covers launch position, speed cap, neutral stop,
+simultaneous inputs, the left wall, fixed jump height, no double jump, the
+coyote window at 5/6/7 ticks, the input buffer at 5/6/7 ticks, low ceiling,
+pause freeze, focus-loss pause, spike collision, duplicate-death suppression,
+respawn, manual restart not counting as death, twenty consecutive retries, death
+taking priority over finish, the fall boundary, the scripted route, and replay
+idempotency.
 
 ### Baseline, stated honestly
 
-I did not capture a green baseline before modifying the project. The earliest receipt in `evidence/` already contains the ninja character and the extended level. The baseline is therefore inferred rather than recorded: on that first run, 24 of 25 checks passed and the single failure was `complete-real-route`, which is route-specific. Every mechanical check — speed cap, coyote window, jump buffer, ceiling, spike collision, respawn, twenty-retry stress, fall boundary, replay idempotency — passed on the first run and has passed on every run since, which indicates the character and level work did not disturb movement or collision behaviour. A properly recorded pre-change baseline would have been better evidence, and this is a process mistake on my part rather than a result.
+I did not capture a green baseline before modifying the project. The earliest
+receipt in `evidence/` already contains the ninja character and an extended
+level. The baseline is therefore inferred rather than recorded: on that first
+run, 24 of 25 checks passed and the single failure was `complete-real-route`,
+which is route-specific. Every mechanical check has passed on every run from the
+first onwards, which indicates the character and level work did not disturb
+movement or collision behaviour. A recorded pre-change baseline would have been
+better evidence, and this is a process mistake rather than a result.
 
-### Confirmation that tuning was not altered
+### Confirmation that movement tuning was not altered
 
-`fixed-jump-and-no-double` reports `rise_px: 56.07` on every run. That is the engine measuring the actual jump height achieved by the player body, and it is unchanged from before my edits. It also sits close to the 53.3 px peak that the constants predict analytically, the difference being that the measurement samples a discrete physics tick rather than the exact apex. Movement tuning is untouched.
-
----
-
-## 2. Route fixture — the failure I predicted
-
-Prediction C in CHANGE-BRIEF said the scripted route would fail once the finish moved. It did.
-
-`godot/tests/route_driver.gd` holds a fixed input route: hold right, and jump on crossing each x in `jump_marks`. The original five marks ended at 712, which was sufficient for the 960-wide level.
-
-I did not delete the failing assertion or weaken the expected result. I extended the fixture and diagnosed each failure from the coordinates it reported.
-
-| Marks | Observed | Diagnosis |
-|---|---|---|
-| 5 original | died x=993, y=435.9, 5 marks used | y beyond `fall_y` 430 — walked off the old ground into the new gap with no jumps left |
-| + 950, 1110, 1230 | died x=1238, y=304.7, 8 used | y at spike height, not falling — jumped too early and landed on the second cluster |
-| mark moved 1230 → 1222 | died x=1353, y=436.1, 8 used | falling again, in the gap before the final slab — out of marks |
-| + 1290 | **x=1478, y=319.9, state 4, 0 deaths, 537 ticks** | reached the finish at 1480 and completed |
-
-Final fixture: `[138, 292, 424, 548, 712, 950, 1110, 1222, 1290]` — four marks added, none removed, no assertion changed.
-
-**Tolerance worth recording.** The difference between landing on the spikes and clearing them was 8 pixels of jump-mark position: 1230 fails, 1222 passes. The fixture is tightly coupled to the hazard placement and will need revisiting if that cluster moves.
-
-**Coverage limit.** The fixture drives the ground route only. The high route is verified by my own play and by the reachability checker, not by a scripted input. A second fixture covering the high route would be a genuine improvement and is not implemented.
+`fixed-jump-and-no-double` reports `rise_px: 56.07` on every run across the whole
+project history. That is the engine measuring the actual height achieved by the
+player body, unchanged from before my edits. Nothing in `tuning.gd` was touched.
 
 ---
 
-## 3. Reachability checker
+## 2. Route fixture
 
-`scripts/check_reachability.py`. Reads the constants out of `tuning.gd` and the geometry out of `first_steps.json`, derives the jump envelope analytically, then checks headroom on every walkable surface and searches for a route from spawn to finish. It reads only; it cannot alter the game.
+Prediction C in CHANGE-BRIEF said the scripted route would fail once the finish
+moved. It did, repeatedly — once per level redesign. No failing assertion was
+ever deleted or weakened; the fixture was extended and retuned each time.
 
-Derived from the shipped constants (speed 160, jump_velocity 320, gravity 960):
+`godot/tests/route_driver.gd` holds the right key and jumps on crossing each x in
+`jump_marks`. It has no ability to move left.
 
-    peak rise   53.3 px
-    airtime     0.67 s
-    flat reach  106.7 px, safe budget 85.3 at an 80% margin
+**Consequence for coverage.** The final ground route requires the player to
+double back west after climbing at the east end. The fixture physically cannot
+drive it. It therefore covers the **high route** instead. This is a deliberate
+choice: the high route is entirely rightward, and it exercises the two-step climb
+and the runway, which are the new geometry.
 
-### It found a defect that playing did not
+**Diagnosis history.** Each failure was read from the coordinates the test
+reports, not guessed at:
 
-First run against the level I had already built, tested and declared finished:
+| Symptom | Diagnosis |
+|---|---|
+| died x=993, y=435.9, 5 marks used | y past `fall_y` 430 — walked off the old ground into the new gap with no marks left |
+| died x=1238, y=304.7, 8 used | y at spike height, not falling — jumped too early, landed on a cluster |
+| died x=1353, y=436.1, 8 used | falling again in the last gap, out of marks |
+| died x=1115, y=317.5, 6 used | mark tuned for a hazard that had since moved 40 px |
+| died x=1244, y=313.7, 8 used | first cluster of the redesigned zone 3 |
+| identical output across three different mark values | not caching — the mark was never firing, because the player was airborne at that x every time. Found by adding a temporary trace of x, y, `is_on_floor()` and the mark index, which showed the fixture had been on the high platforms since an earlier mark. |
 
-    headroom
-      P5  x 1000-1120 top 320   clearance 24 px  < player height 28   BLOCKED
+That trace was the turning point. Three edits produced byte-identical results and
+I assumed a stale cache; clearing `.godot` changed nothing. Printing the actual
+state showed the fixture was not where I believed it was.
 
-The first high platform, `[1010, 280, 48, 16]`, has its underside at y=296 and sits directly over the low route whose surface is at y=320. That leaves 24 px of clearance for a player whose collider is 28 px tall. The ninja cannot walk under it.
+**Final approach.** Rather than hand-tuning a seventh time, the marks are now
+derived by the simulator: `python3 scripts/solve.py marks`. Final fixture:
 
-I had not encountered this because the jump onto that slab carries the player past x=1058 and lands beyond the overhang. A player who lands short would be wedged with no way out except R — a soft-lock in a section I had already signed off.
+    [138.0, 292.0, 424.0, 548.0, 712.0, 900.0, 1010.0, 1085.0, 1175.0, 1450.0]
 
-**Fixed** by raising the platform 8 px to `[1010, 272, 48, 16]`, giving 32 px clearance. Re-verified:
+The first five are the starter's originals, unchanged. Five were added.
+
+**A real failure of the generated output, worth recording.** The first
+simulator-derived set completed in the simulator but died in the engine. Its
+marks were tick-exact and several fired inside the coyote window, after the
+player had already left the platform edge. The engine's floor detection differs
+from the simulator's by a frame or two, so those jumps were missed entirely.
+`solve.py` now pulls each mark progressively back off the edge and replays until
+the fixture completes, which produces marks that fire while the player is
+unambiguously grounded.
+
+**Engine and simulator agreement.** With the final marks the engine completes in
+**589 ticks** and the simulator predicts **592** — agreement to within 0.5% over
+roughly ten seconds of play.
+
+---
+
+## 3. Verification tooling
+
+Three scripts, all read-only. None can alter game behaviour and none replaces
+human playtesting.
+
+### `scripts/sim.py` — tick-accurate movement replica
+
+Mirrors `player.gd::_physics_process` at 60 Hz: the same order of operations
+(gravity applied before the jump assignment), the 18x28 collider at offset
+(0, −14), axis-separated collision resolution, coyote and buffer windows,
+terminal velocity, and the hazard trigger built as three triangles across each
+cluster's width.
+
+**Validated twice before being relied on.** The engine's own test reports
+`rise_px: 56.07` for a single jump; the simulator produces **56.00**. Across a
+full scripted route the engine takes 589 ticks and the simulator predicts 592.
+
+Worth noting: the analytic projectile formula gives a 53.3 px apex, which is what
+I had been designing against. The true discrete value is 56. That 2.7 px
+discrepancy is the sort of thing that makes a jump feel inconsistent, and it is
+why the simulator rather than the formula is the authority here.
+
+### `scripts/solve.py` — route search and fixture generation
+
+Breadth-first over game states, allowing right, left and neutral movement so the
+ground route's backtrack can be modelled. Every edge costs one tick, so the first
+finish reached is the fastest possible. Reports the two routes separately,
+distinguished by whether the runway is touched.
+
+    $ python3 scripts/solve.py routes
+    level first-steps  width 1920  finish x=1620
+      high route:   9.73s
+      ground route: 11.87s
+      ground route costs +2.13s with optimal play
+
+### `scripts/check_reachability.py` — static geometry checker
+
+Reads the constants out of `tuning.gd` and the geometry out of
+`first_steps.json`, derives the jump envelope, and checks standing headroom,
+forced-jump corridors, every platform-to-platform transition, and whether a route
+from spawn to finish exists at all.
 
     headroom
       all 12 surfaces clear 28 px
+    jump corridors
+      13 of 13 forced-jump sites clear with margin
+    jumps
+      18 transitions reachable, none inside the tight band
     route
-      spawn P0 -> finish P7
-      P0 -> P1 -> P2 -> P5 -> P6 -> P7   (5 moves)
-    PASS
+      spawn P0 -> finish P9
+      P0 -> P1 -> P2 -> P5 -> P11 -> P10 -> P9   (6 moves)
+    PASS  every surface is standable and the finish is reachable
 
-The jump onto that platform remains makeable: 50 px gap with a 48 px rise against a 56 px safe limit. Confirmed by play — it is noticeably tighter than before but doable.
+**Cause and effect, demonstrable on screen:**
 
-Re-ran `test_game.gd` afterwards: still 25 / 0. The fixture takes the ground route, so it was unaffected, which is the expected result.
-
-### Cause and effect, demonstrable
-
-    python3 scripts/check_reachability.py --jump-velocity 190
-
-Same geometry, weaker jump. Peak rise falls from 53.3 to 18.8 px and flat reach from 106.7 to 63.3. The 32 px block, the 40 px platform climbs and the 64 px gap all move out of range. The route search then reports:
-
+    $ python3 scripts/check_reachability.py --jump-velocity 190
     route
-      no route from spawn P0 to finish P7
+      no route from spawn P0 to finish P9
     FAIL
       - finish unreachable from spawn
 
-One constant changed, a traceable chain of consequences, a specific failure named. This is the mechanism demonstrated in the film.
-
-### Known limits of the checker
-
-- It models a jump from a standing or full-speed start and does not simulate acceleration over a short run-up, so a landing marked PASS could still be missed by a player who has not reached full speed.
-- It treats every solid's top as one continuous walkable surface and does not model partial obstruction along that surface.
-- It ignores hazards entirely. A route it calls reachable may still be lethal.
-- The 80% safety margin is a judgment call, not a derived value.
+One constant changed, peak rise falls from 53 to 19, and specific geometry moves
+out of range. This is the mechanism shown in the film.
 
 ---
 
-## 4. Human playtest — my own
+## 4. Defects found, and which method found them
+
+Four clearance and design defects, found four different ways. None of the methods
+would have found all of them.
+
+| Defect | Found by | Missed by |
+|---|---|---|
+| Hazard drawing hard-coded y at 320/304 while collision read the real rectangle | reading `session.gd` | playing — both my hazards sat at ground level, so the bug was dormant |
+| A high platform left 24 px of standing clearance for a 28 px player | the reachability checker | playing — the jump onto that slab always carried past the overhang |
+| A spike cluster was unjumpable: 32 px of clearance is enough to stand under but not to jump in | playing | the checker — it only tested standing height |
+| Route time is horizontal distance ÷ run speed, so a same-length fork can never be slower | the simulator | both playing and the checker |
+
+**On the second and third together.** These are the same physical quantity used
+for two different purposes, and treating them as one thing was my error. Standing
+needs 28 px. Jumping needs the full rise plus the player's height, because the
+jump is fixed-height and cannot be shortened. I extended the checker with a
+jump-corridor pass that scans for a viable takeoff point at each hazard and gap,
+and rejects takeoffs a running player could not realistically hit — the window is
+sized from the game's own 6-tick input buffer, about 16 px of travel.
+
+**On the fourth.** `velocity.x` is never reset by jumping, landing, or changing
+height. The solver returned identical times for both routes across 27 candidate
+layouts before I understood why. The design in CHANGE-BRIEF section 2 was
+therefore unachievable as written, and the fix was to make the ground route
+physically longer by forcing a backtrack.
+
+---
+
+## 5. Human playtest — my own
 
 Full sessions played in the Godot editor at 1278x719.
 
 | Check | Observed |
 |---|---|
-| Startup | Project runs from a normal F5 launch, no script errors in Output |
-| Controls | A/D and arrows move, Space jumps, R retries, Esc pauses, Enter starts and replays — all as documented |
+| Startup | Runs from a normal F5 launch, no script errors in Output |
+| Controls | A/D and arrows move, Space jumps, R retries, Esc pauses, Enter starts and replays |
 | Character, facing right | Sword on the back, headband trailing left, pupil on the leading side |
-| Character, facing left | Entire figure mirrors; sword and headband move to the other side and continue to trail |
+| Character, facing left | Whole figure mirrors; sword and headband swap sides and still trail |
 | Character, standing | Legs level, headband sways gently |
-| Character, running | Legs alternate; headband whips |
+| Character, running | Legs alternate, headband whips |
 | Character, airborne | Front knee tucks, back leg trails — a visibly distinct third pose |
-| Visual vs collision, pressed to a wall | The hood is 12 wide against an 18 wide collider, so the head stops ~3 px short of the block while the torso is flush. Checked facing both ways. Judged to read as a hooded figure rather than a defect. Prediction D closed. |
-| Headroom under the new high platform | Clear space above the head after the 8 px fix |
-| Ground route, complete | **14.5 s, 0 retries** |
-| High route, complete | **9.6 s, 0 retries** |
+| Visual vs collision, pressed to a wall | The 12-wide hood against an 18-wide collider stops the head ~3 px short while the torso is flush. Checked facing both ways. Reads as a hooded figure, not a defect. **Prediction D closed.** |
+| Headroom under the new platforms | Clear above the head; the 24 px defect is fixed |
+| **High route, complete** | **10.1 s, 1 retry** |
+| **Ground route, complete** | **13.6 s, 0 retries** |
 | Spike death, new section | Kills, message "Watch the spikes", returns to spawn |
 | Fall death, new section | Kills, message "Missed the landing", returns to spawn |
 | R in the new section | Returns to spawn; retry counter does **not** increment |
 | Pause and resume, new section | Freezes, resumes cleanly |
 | Replay after completion | Second run starts clean, timer reset |
-| Camera | Follows to the relocated finish at 1480 with no manual change — the limit is already derived from `level.width` |
-| Presentation | Grid, background hills, zone captions and FINISH label all extend across the new section after the fixes in section 5 |
+| Camera | Follows to the relocated finish with no code change — the limit is already derived from `level.width` |
+| Presentation | Grid, hills, zone captions, the wayfinding hint and the FINISH label all extend across the new section |
 
-**On the retry counter.** R returning to spawn without incrementing the counter is the starter's deliberate behaviour, not a regression. `restart_attempt()` is called directly by the input handler, while `deaths += 1` lives in `resolve_contacts()` and runs only on an actual death. The suite asserts this explicitly with `manual-restart-not-death`, which passes.
+**Measured against the optimum.** The solver's best possible times are 9.73s and
+11.87s. My high route was 0.4s off optimal; my ground route 1.7s off. The larger
+gap on the ground route is expected — it requires finding the climb, which
+optimal play knows in advance.
 
----
-
-## 5. Presentation defects found and fixed
-
-Prediction B said hard-coded drawing coordinates would not follow the level data. Confirmed, with an evidence screenshot taken before fixing.
-
-| Defect | Was | Now |
-|---|---|---|
-| Background grid stopped at the old boundary | `range(0, 961, 32)` and a literal 960 | derived from `level.width` |
-| Backdrop rectangle too narrow | 1800 wide | 2400 wide |
-| Background hills stopped | `[100, 470, 770]` | two further positions added |
-| FINISH caption stranded at the old flag position | fixed at x=878 | positioned relative to `level.finish[0]` |
-| New section unlabelled | — | zone 03 caption added, matching the existing two-line house style |
-
-### A defect I did not predict
-
-The hazard drawing read x from the level data but hard-coded y as 320 and 304, and always drew exactly three triangles 8 px apart regardless of the hazard's stated width. The collision triangles in `_add_area` are built from the real rectangle. A hazard placed anywhere other than ground level would therefore kill the player at its true position while drawing at the bottom of the level — precisely the visual/physics disagreement the assignment warns about.
-
-Both of my hazards sit at y=304, so the bug is dormant in this layout. Fixed anyway: the drawing now reads y, height and width from the entry and derives triangle width as `w / 3.0`, matching what the collision code already does.
-
-Verified as a no-op refactor for the current data — the existing spike clusters render identically to before. That was the intended result: correct for data not yet written, unchanged for data already written.
+**On the retry counter.** R returning to spawn without incrementing is the
+starter's deliberate behaviour, not a regression. `restart_attempt()` is called
+directly by the input handler, while `deaths += 1` lives in `resolve_contacts()`
+and runs only on an actual death. The suite asserts this with
+`manual-restart-not-death`, which passes.
 
 ---
 
-## 6. Evidence-based revision
+## 6. Evidence-based revisions
 
-**Observed.** With the first working version of the fork, I timed both routes: ground 10.5 s, high 10.4 s.
+### Revision 1 — the fork was decoration
 
-**Judgment.** The routes were not a decision. The high route cost three precise jumps and a fall risk and returned one tenth of a second. No player would choose it, so the branch was decoration.
+**Observed.** First working version of the fork timed at 10.5s ground and 10.4s
+high.
 
-**Changed.** Lengthened the ground route with a second gap and a third spike cluster, and gave the high route wide flat hops at a constant height so that movement along it is uninterrupted. Level width grew from 1360 to 1520.
+**Judgment.** Not a decision. The high route cost three precise jumps and a fall
+risk and returned a tenth of a second.
 
-**Re-measured.** Ground 14.5 s, high 9.6 s. A 4.9 s spread, roughly one third faster. Same player, same session, 0 retries on both.
+**Changed, then changed again.** Three attempts at lengthening the ground route
+and shortening the high route. All tied or broke a route.
 
-The fork now trades time against risk as the brief claimed it would.
+**Resolved by measurement, not intuition.** Wrote the simulator, established that
+route time is distance-bound, and redesigned around a forced backtrack instead.
+Result: 9.73s versus 11.87s optimal, 10.1s versus 13.6s measured by hand.
+
+### Revision 2 — an unjumpable hazard
+
+**Observed.** Playing the ground route, I could not clear a spike cluster. The
+ninja bumped the platform overhead every time.
+
+**Diagnosed.** 32 px of clearance: enough to stand, not enough to jump.
+
+**Changed.** Moved the hazard clear of the overhang, then extended the checker so
+it would catch this class of defect rather than only standing clearance.
+
+### Revision 3 — wayfinding
+
+**Observed.** On the ground route the flag is visible on the shelf but
+unreachable, and the way up is off-screen to the east. Playing it myself I
+hesitated, and the 1.7s gap against optimal play is mostly that hesitation.
+
+**Changed.** Added a ground-level hint at x=1480 reading "No way up from here.
+Keep going right." Positioned clear of the platforms and hazards so it reads
+during normal play.
+
+**Still unresolved.** Whether that hint is sufficient for someone who has not
+built the level. Named as a limitation below.
 
 ---
 
 ## 7. Honest limitations
 
-1. **No recorded pre-change baseline.** Covered in section 1. A process mistake.
-2. **No external playtester yet.** Every human result here is my own. The assignment asks for another person's actual feedback and I have not yet collected it.
-3. **The high route has no automated coverage.** The fixture drives the ground route only.
-4. **The route fixture is brittle.** An 8 px change in one jump mark is the difference between passing and landing on spikes. It is coupled to the current hazard placement.
-5. **The reachability checker does not model acceleration.** A short run-up means the player may not be at 160 px/s at takeoff, so a jump it marks PASS could still be missed in play. Its margins are advisory.
-6. **The checker ignores hazards.** It proves geometric reachability, not survivability.
-7. **Two TIGHT transitions remain**, both long drops from a high platform to a low one. Neither lies on an intended route, and I have left them rather than adding geometry to remove them.
-8. **The sword and headband overhang the collider** by 2–3 px on the trailing side. Declared deliberate in CHANGE-BRIEF. Because they always trail, the overhang points away from the direction of travel and never leads into a wall the player is walking toward.
+1. **No external playtester.** Every human result here is my own. The assignment
+   asks for another person's actual feedback and I have not collected it. This is
+   the largest gap in this report.
+2. **No recorded pre-change baseline.** Covered in section 1. A process mistake.
+3. **The ground route has no automated coverage.** `route_driver.gd` cannot move
+   left, so it cannot drive the backtrack. The ground route is verified by my own
+   play and by the solver, not by a scripted input. A driver that accepts an axis
+   sequence rather than only right would fix this and is not implemented.
+4. **The route fixture is tightly coupled to the geometry.** Every level change
+   has broken it. It is now generated rather than hand-tuned, which makes
+   regenerating cheap, but it is not robust to geometry changes on its own.
+5. **Wayfinding is unproven.** See Revision 3. A first-time player may not find
+   the eastern climb. This is the most likely usability failure and I have no
+   external evidence either way.
+6. **The simulator does not model everything.** It reproduces movement,
+   collision and hazards, but not the finish area's exact overlap semantics or
+   the `contact_settle_ticks` logic. Its 0.5% agreement over a full route is
+   measured on one route, not proven in general.
+7. **The reachability checker's margins are advisory.** The 80% safety factor is
+   a judgment call, not a derived value, and the checker does not model
+   acceleration over a short run-up.
+8. **One TIGHT transition remains** — a long drop from the runway to the ground
+   slab, at 2% margin. It is not on either intended route and I have left it
+   rather than adding geometry to remove it.
+9. **The sword and headband overhang the collider** by 2–3 px on the trailing
+   side. Declared deliberate in CHANGE-BRIEF. Because they always trail, the
+   overhang points away from the direction of travel and never leads into a wall
+   the player is walking toward.
+10. **The level is now 1920 wide, double the starter's 960.** That is more scope
+    than the assignment asked for, and the backtrack puzzle is the most
+    complicated part of the submission. A shorter section would have been easier
+    to inspect and to explain.

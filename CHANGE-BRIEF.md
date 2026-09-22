@@ -251,3 +251,94 @@ The fork now trades time against risk as the brief claimed.
 Those are left unedited as the original prediction. Current layout is in
 `godot/levels/first_steps.json`; level width is now 1520 and the finish sits
 at x=1480.
+
+### 2026-09-20 — zone 3 redesigned after the time-based fork was disproved
+
+**The claim in section 2 was wrong, and I proved it wrong myself.**
+
+Section 2 asserts that the two routes "trade time against risk" — that the high
+route would be faster and the ground route slower. After building it I measured
+both and got 10.5s and 10.4s. I then rebuilt the section three more times trying
+to open a gap, and each attempt either tied or broke one of the routes outright.
+
+Rather than keep tuning by feel, I wrote a tick-accurate simulator of the game's
+own movement code (`scripts/sim.py`) and a route search over it
+(`scripts/solve.py`). The simulator mirrors `player.gd::_physics_process` step
+for step at 60 Hz, including the order in which gravity and the jump assignment
+are applied, the 18x28 collider, and axis-separated collision resolution.
+
+**Validation before use.** The engine's own test reports `rise_px: 56.07` for a
+single jump. The simulator produces 56.00 — a 0.07 px difference, which is the
+gap between sampling a discrete physics tick and the true apex. I later checked
+a full route: the engine completes the scripted fixture in 589 ticks and the
+simulator predicts 592, agreeing to within 0.5% across ten seconds of play.
+
+**The finding.** I searched 27 layouts with the solver. Every single one returned
+an identical time for both routes. The reason is in the movement code:
+`velocity.x` is never reset by jumping, landing, or changing height, so
+completion time is horizontal distance divided by run speed and nothing else.
+(1620 − 64) ÷ 160 matches the measured times almost exactly. A route that covers
+the same x-range as another cannot be slower, however many platforms or hazards
+it contains.
+
+So the design premise in section 2 was not achievable. My earlier 14.5s versus
+9.6s measurement was not the level working as intended — it was me hesitating on
+an unfamiliar route.
+
+**What I changed instead.** The only lever the engine allows is making a route
+physically longer, which means forcing the player to travel ground they have
+already covered. The finish was moved up onto a shelf at y=224, reachable
+directly by the high route. The ground route can walk underneath and see the
+flag but cannot reach it: the only way up is a step at x=1790, past the far end
+of the level, and the stepping stone above it sits 96 px over the ground — beyond
+the 56 px jump ceiling — so it cannot be shortcut from below. The ground player
+must run to the east end, climb, then hop back west twice and walk back to the
+flag at 1620.
+
+Two earlier attempts at this failed because I placed that stone within jump
+range at y=272, and the solver found the shortcut immediately. That is exactly
+the kind of mistake playtesting would have taken a long time to surface.
+
+**Verified result.** Solver: high route 9.73s, ground route 11.87s, a 2.13s cost
+with optimal play, both routes proven completable. Measured by hand: high 10.1s
+with 1 retry, ground 13.6s with 0 retries — a 3.5s spread, wider than the
+optimum because the ground route also demands wayfinding.
+
+**A second defect class the earlier checker missed.** While testing the ground
+route I found I could not jump over a spike cluster: a high platform overhead
+left 32 px of clearance, which is enough to stand under but not to jump in. The
+jump in this game is fixed height — `player.gd` assigns `tuning.jump_velocity`
+outright with no variable-height jump — so the player always rises the full
+amount or bumps their head. Standing clearance and jump clearance are different
+requirements and I had only checked the first. I extended
+`scripts/check_reachability.py` with a jump-corridor check that scans for a
+viable takeoff point at every hazard and gap, using the game's own 6-tick input
+buffer to reject takeoffs a running player could not realistically hit.
+
+The derived design rule, which I should have worked out before placing anything:
+a ground-route jump needs roughly 110 px of clear sky, so a platform low enough
+to be reachable from the ground can only sit over a flat stretch where no jump
+is required.
+
+**Final geometry** is in `godot/levels/first_steps.json`: width 1920, ten
+solids, five hazard clusters, finish at (1620, 168). The coordinates planned in
+section 2 above are left untouched as the original prediction and bear almost no
+resemblance to what shipped.
+
+**Route fixture.** `route_driver.gd` can only hold the right key, so it cannot
+drive the ground route's backtrack. It now covers the high route instead, with
+marks derived by `solve.py marks` rather than tuned by hand. The first generated
+set failed in the engine because its marks fired inside the coyote-time window;
+`solve.py` now pulls each mark back off the platform edge until a replay
+confirms it completes. 25 of 25 mechanics checks and 9 of 9 keyboard checks pass.
+
+**Honest note on effort.** This section was rebuilt roughly eight times. Most of
+that was avoidable: I was hand-calculating projectile arcs and placing platforms
+by eye when the physics were simple enough to simulate exactly. Writing the
+simulator took about an hour and settled in minutes what guessing had failed to
+settle all afternoon. The lesson I am taking is that when a system is small and
+deterministic, simulating it is cheaper than reasoning about it.
+
+**Verification plan status.** Items 2, 3, 4, 5 and 7 of section 5 are complete
+and recorded in TEST-REPORT.md. Item 1 was not done — no pre-change baseline
+was captured. Item 6, external playtesting, is still outstanding.
